@@ -1,0 +1,626 @@
+{
+  "languages": [
+    {
+      "id": "lang:machine_code",
+      "name": "Machine code",
+      "first_release_year": 0,
+      "current_primary_implementation_language": "unspecified",
+      "notes": "Conceptual root node representing opaque binary seeds and CPU-executed code. Year is not meaningful."
+    },
+    {
+      "id": "lang:assembly",
+      "name": "Assembly language",
+      "first_release_year": 0,
+      "current_primary_implementation_language": "unspecified",
+      "notes": "Conceptual root node for low-level human-readable code used in runtimes/compilers and bootstrap steps. Year is not meaningful."
+    },
+    {
+      "id": "lang:bcpl",
+      "name": "BCPL",
+      "first_release_year": 1966,
+      "current_primary_implementation_language": "unspecified",
+      "notes": "Included as an upstream systems-language ancestor for B and C. First-release year varies by historical source; treat as approximate."
+    },
+    {
+      "id": "lang:b",
+      "name": "B",
+      "first_release_year": 1969,
+      "current_primary_implementation_language": "unspecified",
+      "notes": "Included as a close ancestor to C in Unix lineage. First-release year varies by historical source; treat as approximate."
+    },
+    {
+      "id": "lang:c",
+      "name": "C",
+      "first_release_year": 1972,
+      "current_primary_implementation_language": "C and C++ (major compilers/toolchains)",
+      "notes": "Early C compilers were bootstrapped through earlier system languages (notably B) and then self-hosted on C on Unix; see Ritchie's history."
+    },
+    {
+      "id": "lang:cxx",
+      "name": "C++",
+      "first_release_year": 1985,
+      "current_primary_implementation_language": "C++ (self-hosted compilers) plus C/C++ runtimes",
+      "notes": "Cfront era relied on translation to C; later industrial compilers are self-hosted or largely implemented in C++."
+    },
+    {
+      "id": "tool:gcc",
+      "name": "GCC",
+      "first_release_year": 1987,
+      "current_primary_implementation_language": "C++ and C (plus some other languages in-tree)",
+      "notes": "Node type: compiler suite/toolchain. GCC's repo language mix shows substantial C++ and C today."
+    },
+    {
+      "id": "tool:llvm",
+      "name": "LLVM",
+      "first_release_year": 2003,
+      "current_primary_implementation_language": "C++",
+      "notes": "Node type: compiler infrastructure. LLVM documentation and repo show C++ as the core implementation language."
+    },
+    {
+      "id": "tool:clang",
+      "name": "Clang",
+      "first_release_year": 2007,
+      "current_primary_implementation_language": "C++",
+      "notes": "Node type: C-family compiler frontend; launched as a new LLVM C-family frontend in 2007."
+    },
+    {
+      "id": "lang:go",
+      "name": "Go",
+      "first_release_year": 2012,
+      "current_primary_implementation_language": "Go and Assembly (toolchain/runtime)",
+      "notes": "Go 1 released in 2012; Go 1.5 completed the C-to-Go toolchain translation and removed most C from compiler/runtime."
+    },
+    {
+      "id": "lang:rust",
+      "name": "Rust",
+      "first_release_year": 2015,
+      "current_primary_implementation_language": "Rust (compiler), with generated artifacts and build tooling",
+      "notes": "Rust 1.0 released 2015. Early compiler work included OCaml and C; modern rustc is largely Rust and uses staged bootstrapping."
+    },
+    {
+      "id": "tool:mrustc",
+      "name": "mrustc",
+      "first_release_year": 2016,
+      "current_primary_implementation_language": "C++",
+      "notes": "Node type: alternative Rust compiler designed for bootstrapping a recent rustc."
+    },
+    {
+      "id": "lang:python",
+      "name": "Python",
+      "first_release_year": 1991,
+      "current_primary_implementation_language": "C (CPython reference implementation)",
+      "notes": "First public releases date to 1991; CPython remains the primary reference implementation."
+    },
+    {
+      "id": "lang:ruby",
+      "name": "Ruby",
+      "first_release_year": 1995,
+      "current_primary_implementation_language": "C and Ruby (CRuby/MRI; includes bytecode components)",
+      "notes": "Ruby's canonical implementation is CRuby/MRI. Ruby 1.9 introduced the YARV-based VM as the official interpreter."
+    },
+    {
+      "id": "lang:ocaml",
+      "name": "OCaml",
+      "first_release_year": 1996,
+      "current_primary_implementation_language": "OCaml and C (compiler/runtime), with some Assembly",
+      "notes": "OCaml's core system includes compilers plus a C runtime; the official repo shows OCaml + C as dominant."
+    },
+    {
+      "id": "lang:haskell",
+      "name": "Haskell",
+      "first_release_year": 1990,
+      "current_primary_implementation_language": "Multiple; GHC is dominant",
+      "notes": "Haskell language first-release year is commonly cited as 1990 (Haskell 1.0). Treat as approximate due to variation across historical summaries."
+    },
+    {
+      "id": "tool:ghc",
+      "name": "GHC",
+      "first_release_year": 1992,
+      "current_primary_implementation_language": "Haskell and C (runtime system)",
+      "notes": "Node type: compiler. GHC is widely cited as implemented largely in Haskell with a C runtime system; primary confirmation varies by component."
+    },
+    {
+      "id": "lang:java",
+      "name": "Java",
+      "first_release_year": 1996,
+      "current_primary_implementation_language": "Java (javac) plus C++ (HotSpot JVM)",
+      "notes": "Java 1.0 public release dated Jan 23, 1996 in Sun/JavaSoft press materials. OpenJDK javac is in Java; HotSpot is in C++."
+    },
+    {
+      "id": "tool:hotspot",
+      "name": "HotSpot JVM",
+      "first_release_year": 1999,
+      "current_primary_implementation_language": "C++",
+      "notes": "Node type: runtime/VM. OpenJDK sources state HotSpot code is written in C++."
+    },
+    {
+      "id": "lang:javascript",
+      "name": "JavaScript",
+      "first_release_year": 1995,
+      "current_primary_implementation_language": "Multiple engines; major engines are primarily C++ (with some Rust in SpiderMonkey)",
+      "notes": "Year is widely cited as 1995 for initial creation; treat as approximate in the absence of a single primary artifact in this dataset."
+    },
+    {
+      "id": "tool:v8",
+      "name": "V8",
+      "first_release_year": 2008,
+      "current_primary_implementation_language": "C++",
+      "notes": "Node type: JavaScript/WebAssembly engine. Official docs describe V8 as written in C++."
+    },
+    {
+      "id": "tool:spidermonkey",
+      "name": "SpiderMonkey",
+      "first_release_year": 1995,
+      "current_primary_implementation_language": "C++ and Rust (plus some JavaScript)",
+      "notes": "Node type: JavaScript/WebAssembly engine. Project docs describe an implementation spanning C++, Rust, and JavaScript."
+    },
+    {
+      "id": "tool:javascriptcore",
+      "name": "JavaScriptCore",
+      "first_release_year": 2001,
+      "current_primary_implementation_language": "C++ (with some C, Assembly, Objective-C integration)",
+      "notes": "Node type: JavaScript engine (WebKit). WebKit docs describe the codebase as mostly C++ with bits of C and assembly, primarily in JavaScriptCore."
+    },
+    {
+      "id": "lang:csharp",
+      "name": "C#",
+      "first_release_year": 2002,
+      "current_primary_implementation_language": "C# (Roslyn compiler) plus C/C++ (runtimes)",
+      "notes": "Microsoft's C# version history lists C# 1.0 released January 2002."
+    },
+    {
+      "id": "tool:dotnet_runtime",
+      "name": ".NET Runtime",
+      "first_release_year": 2002,
+      "current_primary_implementation_language": "C# with significant C++ and C and some Assembly",
+      "notes": "Node type: runtime/standard libraries/tooling. The dotnet/runtime repo language mix shows C# dominant with major C++ and C portions."
+    },
+    {
+      "id": "tool:roslyn",
+      "name": "Roslyn",
+      "first_release_year": 2014,
+      "current_primary_implementation_language": "C# and Visual Basic .NET",
+      "notes": "Node type: C# and VB compiler platform. Repo language stats show primarily C# and VB.NET."
+    },
+    {
+      "id": "lang:kotlin",
+      "name": "Kotlin",
+      "first_release_year": 2016,
+      "current_primary_implementation_language": "Kotlin (compiler), with Java and native components",
+      "notes": "Kotlin 1.0 released Feb 2016. The K2 compiler frontend is a rewrite from scratch (per JetBrains)."
+    },
+    {
+      "id": "lang:swift",
+      "name": "Swift",
+      "first_release_year": 2014,
+      "current_primary_implementation_language": "C++ and Swift (compiler repo mix)",
+      "notes": "Swift was introduced in 2014 and open-sourced Dec 3, 2015. The open-source swiftlang/swift repo shows a near-even C++ and Swift split."
+    }
+  ],
+  "implementations": [],
+  "edges": [
+    {
+      "from_language": "lang:b",
+      "to_language": "lang:c",
+      "relationship": "compiler_written_in",
+      "start_year": 1972,
+      "end_year": 1973,
+      "confidence": 0.75,
+      "evidence_source": "https://www.bell-labs.com/usr/dmr/www/chist.html"
+    },
+    {
+      "from_language": "lang:cxx",
+      "to_language": "lang:cxx",
+      "relationship": "compiler_written_in",
+      "start_year": 1983,
+      "end_year": null,
+      "confidence": 0.8,
+      "evidence_source": "https://www.stroustrup.com/hopl2.pdf"
+    },
+    {
+      "from_language": "lang:cxx",
+      "to_language": "tool:llvm",
+      "relationship": "compiler_written_in",
+      "start_year": 2003,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://llvm.org/docs/GettingStarted.html | https://github.com/llvm/llvm-project"
+    },
+    {
+      "from_language": "lang:cxx",
+      "to_language": "tool:clang",
+      "relationship": "compiler_written_in",
+      "start_year": 2007,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://discourse.llvm.org/t/new-llvm-c-front-end-clang/55248"
+    },
+    {
+      "from_language": "lang:cxx",
+      "to_language": "tool:gcc",
+      "relationship": "compiler_written_in",
+      "start_year": 1987,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://github.com/gcc-mirror/gcc"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "tool:gcc",
+      "relationship": "compiler_written_in",
+      "start_year": 1987,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://github.com/gcc-mirror/gcc"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:go",
+      "relationship": "compiler_written_in",
+      "start_year": 2009,
+      "end_year": 2014,
+      "confidence": 0.9,
+      "evidence_source": "https://go.dev/doc/faq"
+    },
+    {
+      "from_language": "lang:go",
+      "to_language": "lang:go",
+      "relationship": "compiler_written_in",
+      "start_year": 2015,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://go.dev/doc/go1.5 | https://go.dev/blog/go1.5"
+    },
+    {
+      "from_language": "lang:assembly",
+      "to_language": "lang:go",
+      "relationship": "runtime_written_in",
+      "start_year": 2015,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://go.dev/doc/go1.5"
+    },
+    {
+      "from_language": "lang:go",
+      "to_language": "lang:go",
+      "relationship": "runtime_written_in",
+      "start_year": 2015,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://go.dev/doc/go1.5"
+    },
+    {
+      "from_language": "lang:ocaml",
+      "to_language": "lang:rust",
+      "relationship": "compiler_written_in",
+      "start_year": 2006,
+      "end_year": 2009,
+      "confidence": 0.9,
+      "evidence_source": "https://github.com/graydon/rust-prehistory"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:rust",
+      "relationship": "compiler_written_in",
+      "start_year": 2006,
+      "end_year": 2009,
+      "confidence": 0.9,
+      "evidence_source": "https://github.com/graydon/rust-prehistory"
+    },
+    {
+      "from_language": "lang:rust",
+      "to_language": "lang:rust",
+      "relationship": "compiler_written_in",
+      "start_year": 2015,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://github.com/rust-lang/rust"
+    },
+    {
+      "from_language": "lang:machine_code",
+      "to_language": "lang:rust",
+      "relationship": "bootstrap_written_in",
+      "start_year": 2015,
+      "end_year": null,
+      "confidence": 0.85,
+      "evidence_source": "https://rustc-dev-guide.rust-lang.org/building/bootstrapping/what-bootstrapping-does.html"
+    },
+    {
+      "from_language": "lang:cxx",
+      "to_language": "tool:mrustc",
+      "relationship": "compiler_written_in",
+      "start_year": 2016,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://github.com/thepowersgang/mrustc"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:python",
+      "relationship": "runtime_written_in",
+      "start_year": 1991,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://github.com/python/cpython | https://en.wikipedia.org/wiki/History_of_Python"
+    },
+    {
+      "from_language": "lang:python",
+      "to_language": "lang:python",
+      "relationship": "runtime_written_in",
+      "start_year": 1991,
+      "end_year": null,
+      "confidence": 0.85,
+      "evidence_source": "https://github.com/python/cpython"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:ruby",
+      "relationship": "runtime_written_in",
+      "start_year": 1995,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://github.com/ruby/ruby"
+    },
+    {
+      "from_language": "lang:ruby",
+      "to_language": "lang:ruby",
+      "relationship": "runtime_written_in",
+      "start_year": 1995,
+      "end_year": null,
+      "confidence": 0.85,
+      "evidence_source": "https://github.com/ruby/ruby"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:ocaml",
+      "relationship": "runtime_written_in",
+      "start_year": 1996,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://github.com/ocaml/ocaml | https://ocaml.org/docs/using-the-ocaml-compiler-toolchain"
+    },
+    {
+      "from_language": "lang:ocaml",
+      "to_language": "lang:ocaml",
+      "relationship": "compiler_written_in",
+      "start_year": 1996,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://github.com/ocaml/ocaml"
+    },
+    {
+      "from_language": "lang:assembly",
+      "to_language": "lang:ocaml",
+      "relationship": "runtime_written_in",
+      "start_year": 1996,
+      "end_year": null,
+      "confidence": 0.85,
+      "evidence_source": "https://github.com/ocaml/ocaml"
+    },
+    {
+      "from_language": "lang:haskell",
+      "to_language": "lang:haskell",
+      "relationship": "compiler_written_in",
+      "start_year": 1992,
+      "end_year": null,
+      "confidence": 0.7,
+      "evidence_source": "https://en.wikipedia.org/wiki/Glasgow_Haskell_Compiler"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:haskell",
+      "relationship": "runtime_written_in",
+      "start_year": 1992,
+      "end_year": null,
+      "confidence": 0.7,
+      "evidence_source": "https://en.wikipedia.org/wiki/Glasgow_Haskell_Compiler"
+    },
+    {
+      "from_language": "lang:java",
+      "to_language": "lang:java",
+      "relationship": "compiler_written_in",
+      "start_year": 2006,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://github.com/openjdk/jdk/blob/master/src/jdk.compiler/share/classes/com/sun/tools/javac/Main.java"
+    },
+    {
+      "from_language": "lang:cxx",
+      "to_language": "lang:java",
+      "relationship": "runtime_written_in",
+      "start_year": 2006,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://openjdk.org/jeps/8283227"
+    },
+    {
+      "from_language": "lang:cxx",
+      "to_language": "tool:hotspot",
+      "relationship": "runtime_written_in",
+      "start_year": 2006,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://openjdk.org/jeps/8283227"
+    },
+    {
+      "from_language": "lang:cxx",
+      "to_language": "tool:v8",
+      "relationship": "runtime_written_in",
+      "start_year": 2008,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://v8.dev/docs | https://github.com/v8/v8"
+    },
+    {
+      "from_language": "lang:cxx",
+      "to_language": "tool:spidermonkey",
+      "relationship": "runtime_written_in",
+      "start_year": 1995,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://spidermonkey.dev/ | https://firefox-source-docs.mozilla.org/js/index.html"
+    },
+    {
+      "from_language": "lang:rust",
+      "to_language": "tool:spidermonkey",
+      "relationship": "runtime_written_in",
+      "start_year": 2015,
+      "end_year": null,
+      "confidence": 0.85,
+      "evidence_source": "https://spidermonkey.dev/"
+    },
+    {
+      "from_language": "lang:javascript",
+      "to_language": "tool:spidermonkey",
+      "relationship": "runtime_written_in",
+      "start_year": 1995,
+      "end_year": null,
+      "confidence": 0.85,
+      "evidence_source": "https://spidermonkey.dev/"
+    },
+    {
+      "from_language": "lang:cxx",
+      "to_language": "tool:javascriptcore",
+      "relationship": "runtime_written_in",
+      "start_year": 2001,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://docs.webkit.org/Getting%20Started/Introduction.html"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "tool:javascriptcore",
+      "relationship": "runtime_written_in",
+      "start_year": 2001,
+      "end_year": null,
+      "confidence": 0.85,
+      "evidence_source": "https://docs.webkit.org/Getting%20Started/Introduction.html"
+    },
+    {
+      "from_language": "lang:assembly",
+      "to_language": "tool:javascriptcore",
+      "relationship": "runtime_written_in",
+      "start_year": 2001,
+      "end_year": null,
+      "confidence": 0.85,
+      "evidence_source": "https://docs.webkit.org/Getting%20Started/Introduction.html"
+    },
+    {
+      "from_language": "lang:csharp",
+      "to_language": "tool:roslyn",
+      "relationship": "compiler_written_in",
+      "start_year": 2014,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://github.com/dotnet/roslyn"
+    },
+    {
+      "from_language": "lang:csharp",
+      "to_language": "tool:dotnet_runtime",
+      "relationship": "runtime_written_in",
+      "start_year": 2014,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://github.com/dotnet/runtime"
+    },
+    {
+      "from_language": "lang:cxx",
+      "to_language": "tool:dotnet_runtime",
+      "relationship": "runtime_written_in",
+      "start_year": 2014,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://github.com/dotnet/runtime | https://devblogs.microsoft.com/dotnet/coreclr-is-now-open-source/"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "tool:dotnet_runtime",
+      "relationship": "runtime_written_in",
+      "start_year": 2014,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://github.com/dotnet/runtime"
+    },
+    {
+      "from_language": "lang:assembly",
+      "to_language": "tool:dotnet_runtime",
+      "relationship": "runtime_written_in",
+      "start_year": 2014,
+      "end_year": null,
+      "confidence": 0.85,
+      "evidence_source": "https://github.com/dotnet/runtime"
+    },
+    {
+      "from_language": "lang:kotlin",
+      "to_language": "lang:kotlin",
+      "relationship": "compiler_written_in",
+      "start_year": 2016,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://github.com/JetBrains/kotlin"
+    },
+    {
+      "from_language": "lang:java",
+      "to_language": "lang:kotlin",
+      "relationship": "compiler_written_in",
+      "start_year": 2016,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://github.com/JetBrains/kotlin"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:kotlin",
+      "relationship": "runtime_written_in",
+      "start_year": 2016,
+      "end_year": null,
+      "confidence": 0.8,
+      "evidence_source": "https://github.com/JetBrains/kotlin"
+    },
+    {
+      "from_language": "lang:cxx",
+      "to_language": "lang:kotlin",
+      "relationship": "runtime_written_in",
+      "start_year": 2016,
+      "end_year": null,
+      "confidence": 0.8,
+      "evidence_source": "https://github.com/JetBrains/kotlin"
+    },
+    {
+      "from_language": "lang:cxx",
+      "to_language": "lang:swift",
+      "relationship": "compiler_written_in",
+      "start_year": 2015,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://github.com/swiftlang/swift | https://www.apple.com/newsroom/2015/12/03Apple-Releases-Swift-as-Open-Source/"
+    },
+    {
+      "from_language": "lang:swift",
+      "to_language": "lang:swift",
+      "relationship": "compiler_written_in",
+      "start_year": 2015,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://github.com/swiftlang/swift"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:swift",
+      "relationship": "compiler_written_in",
+      "start_year": 2015,
+      "end_year": null,
+      "confidence": 0.85,
+      "evidence_source": "https://github.com/swiftlang/swift"
+    },
+    {
+      "from_language": "lang:machine_code",
+      "to_language": "lang:swift",
+      "relationship": "bootstrap_written_in",
+      "start_year": 2022,
+      "end_year": null,
+      "confidence": 0.8,
+      "evidence_source": "https://github.com/apple/swift/blob/main/SwiftCompilerSources/README.md"
+    }
+  ]
+}

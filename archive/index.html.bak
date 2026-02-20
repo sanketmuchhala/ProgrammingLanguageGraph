@@ -1,0 +1,1607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programming Language Lineage Graph</title>
+
+    <!-- Cytoscape.js and extensions -->
+    <script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/cytoscape-cose-bilkent@4.1.0/cytoscape-cose-bilkent.min.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        #app {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            height: 100vh;
+            gap: 0;
+        }
+
+        #controls {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 24px;
+            overflow-y: auto;
+            border-right: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        #controls h1 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+
+        #controls p {
+            font-size: 13px;
+            color: #718096;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .control-group {
+            margin-bottom: 24px;
+        }
+
+        .control-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        button {
+            flex: 1;
+            padding: 10px 16px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #4a5568;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        button:hover {
+            border-color: #667eea;
+            color: #667eea;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        button.active {
+            background: #667eea;
+            border-color: #667eea;
+            color: white;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #e2e8f0;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .slider-value {
+            display: inline-block;
+            margin-top: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 6px;
+            transition: background 0.2s ease;
+        }
+
+        .checkbox-label:hover {
+            background: #f7fafc;
+        }
+
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .rel-indicator {
+            width: 20px;
+            height: 3px;
+            border-radius: 2px;
+        }
+
+        .export-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .export-group button {
+            flex: none;
+        }
+
+        #cy {
+            background: white;
+            position: relative;
+        }
+
+        #legend {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            padding: 16px 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            max-width: 280px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        #legend h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 12px;
+        }
+
+        .legend-section {
+            margin-bottom: 16px;
+        }
+
+        .legend-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .legend-section h4 {
+            font-size: 12px;
+            font-weight: 600;
+            color: #718096;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
+            font-size: 12px;
+            color: #4a5568;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .legend-line {
+            width: 30px;
+            height: 3px;
+            flex-shrink: 0;
+            border-radius: 2px;
+        }
+
+        #tooltip {
+            position: absolute;
+            background: rgba(26, 32, 44, 0.95);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            z-index: 9999;
+            max-width: 320px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            line-height: 1.5;
+        }
+
+        #tooltip.visible {
+            opacity: 1;
+        }
+
+        #tooltip strong {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: #90cdf4;
+        }
+
+        #tooltip a {
+            color: #90cdf4;
+            text-decoration: none;
+        }
+
+        #tooltip a:hover {
+            text-decoration: underline;
+        }
+
+        .validation-warning {
+            background: #fed7d7;
+            border: 1px solid #fc8181;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 16px;
+            font-size: 12px;
+            color: #742a2a;
+        }
+
+        .validation-warning strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        @media (max-width: 768px) {
+            #app {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr;
+            }
+
+            #controls {
+                max-height: 50vh;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e0;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a0aec0;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <aside id="controls">
+            <h1>🔗 Language Lineage</h1>
+            <p>Interactive visualization of programming language implementations and bootstrapping relationships</p>
+
+            <div id="validation-alert"></div>
+
+            <div class="control-group">
+                <label>Layout</label>
+                <div class="button-group">
+                    <button id="layout-dag" class="active">DAG</button>
+                    <button id="layout-force">Force</button>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>Search</label>
+                <input type="text" id="search" placeholder="Filter by name or ID...">
+            </div>
+
+            <div class="control-group">
+                <label>Confidence Threshold</label>
+                <input type="range" id="confidence" min="0" max="100" value="0">
+                <span class="slider-value">≥ <span id="confidence-value">0.00</span></span>
+            </div>
+
+            <div class="control-group">
+                <label>Relationship Types</label>
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="rel-filter" value="compiler_written_in" checked>
+                        <div class="rel-indicator" style="background: #e74c3c;"></div>
+                        <span>Compiler Written In</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="rel-filter" value="runtime_written_in" checked>
+                        <div class="rel-indicator" style="background: #3498db;"></div>
+                        <span>Runtime Written In</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="rel-filter" value="bootstrap_written_in" checked>
+                        <div class="rel-indicator" style="background: #2ecc71;"></div>
+                        <span>Bootstrap Written In</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="rel-filter" value="rewritten_in" checked>
+                        <div class="rel-indicator" style="background: #f39c12;"></div>
+                        <span>Rewritten In</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>Display Options</label>
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="show-self-loops" checked>
+                        <span>Show Self-Loops</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="cluster-coloring" checked>
+                        <span>Cluster Coloring</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="show-all-labels">
+                        <span>Show All Labels</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>Export</label>
+                <div class="export-group">
+                    <button id="export-svg">📄 Download SVG</button>
+                    <button id="export-png">🖼️ Download PNG</button>
+                    <button id="export-validation">📊 Download Validation Report</button>
+                </div>
+            </div>
+        </aside>
+
+        <main id="cy"></main>
+
+        <div id="legend">
+            <h3>Legend</h3>
+
+            <div class="legend-section">
+                <h4>Node Clusters</h4>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #e74c3c;"></div>
+                    <span>C Family / Toolchains</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #3498db;"></div>
+                    <span>JVM / .NET</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #f39c12;"></div>
+                    <span>JS Engines</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #9b59b6;"></div>
+                    <span>Functional Languages</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #1abc9c;"></div>
+                    <span>Systems Languages</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #27ae60;"></div>
+                    <span>Scripting Languages</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #95a5a6;"></div>
+                    <span>Compilers</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #34495e;"></div>
+                    <span>Other</span>
+                </div>
+            </div>
+
+            <div class="legend-section">
+                <h4>Edge Relationships</h4>
+                <div class="legend-item">
+                    <div class="legend-line" style="background: #e74c3c;"></div>
+                    <span>Compiler</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-line" style="background: #3498db;"></div>
+                    <span>Runtime</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-line" style="background: #2ecc71;"></div>
+                    <span>Bootstrap</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-line" style="background: #f39c12;"></div>
+                    <span>Rewritten</span>
+                </div>
+            </div>
+
+            <div class="legend-section">
+                <h4>Visual Encoding</h4>
+                <div class="legend-item">
+                    <span>Node size = degree (connections)</span>
+                </div>
+                <div class="legend-item">
+                    <span>Edge opacity = confidence</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="tooltip"></div>
+
+    <script>
+        // ==================== EMBEDDED DATASET ====================
+        const DATASET = {
+  "languages": [
+    {
+      "id": "lang:machine_code",
+      "name": "Machine code",
+      "first_release_year": 0,
+      "current_primary_implementation_language": "unspecified",
+      "notes": "Conceptual root node representing opaque binary seeds and CPU-executed code. Year is not meaningful."
+    },
+    {
+      "id": "lang:assembly",
+      "name": "Assembly language",
+      "first_release_year": 0,
+      "current_primary_implementation_language": "unspecified",
+      "notes": "Conceptual root node for low-level human-readable code used in runtimes/compilers and bootstrap steps. Year is not meaningful."
+    },
+    {
+      "id": "lang:bcpl",
+      "name": "BCPL",
+      "first_release_year": 1966,
+      "current_primary_implementation_language": "unspecified",
+      "notes": "Included as an upstream systems-language ancestor for B and C. First-release year varies by historical source; treat as approximate."
+    },
+    {
+      "id": "lang:b",
+      "name": "B",
+      "first_release_year": 1969,
+      "current_primary_implementation_language": "unspecified",
+      "notes": "Included as a close ancestor to C in Unix lineage. First-release year varies by historical source; treat as approximate."
+    },
+    {
+      "id": "lang:c",
+      "name": "C",
+      "first_release_year": 1972,
+      "current_primary_implementation_language": "C and C++ (major compilers/toolchains)",
+      "notes": "Early C compilers were bootstrapped through earlier system languages (notably B) and then self-hosted on C on Unix; see Ritchie's history."
+    },
+    {
+      "id": "lang:cxx",
+      "name": "C++",
+      "first_release_year": 1985,
+      "current_primary_implementation_language": "C++ (self-hosted compilers) plus C/C++ runtimes",
+      "notes": "Cfront era relied on translation to C; later industrial compilers are self-hosted or largely implemented in C++."
+    },
+    {
+      "id": "tool:gcc",
+      "name": "GCC",
+      "first_release_year": 1987,
+      "current_primary_implementation_language": "C++ and C (plus some other languages in-tree)",
+      "notes": "Node type: compiler suite/toolchain. GCC's repo language mix shows substantial C++ and C today."
+    },
+    {
+      "id": "tool:llvm",
+      "name": "LLVM",
+      "first_release_year": 2003,
+      "current_primary_implementation_language": "C++",
+      "notes": "Node type: compiler infrastructure. LLVM documentation and repo show C++ as the core implementation language."
+    },
+    {
+      "id": "tool:clang",
+      "name": "Clang",
+      "first_release_year": 2007,
+      "current_primary_implementation_language": "C++",
+      "notes": "Node type: C-family compiler frontend; launched as a new LLVM C-family frontend in 2007."
+    },
+    {
+      "id": "lang:go",
+      "name": "Go",
+      "first_release_year": 2012,
+      "current_primary_implementation_language": "Go and Assembly (toolchain/runtime)",
+      "notes": "Go 1 released in 2012; Go 1.5 completed the C-to-Go toolchain translation and removed most C from compiler/runtime."
+    },
+    {
+      "id": "lang:rust",
+      "name": "Rust",
+      "first_release_year": 2015,
+      "current_primary_implementation_language": "Rust (compiler), with generated artifacts and build tooling",
+      "notes": "Rust 1.0 released 2015. Early compiler work included OCaml and C; modern rustc is largely Rust and uses staged bootstrapping."
+    },
+    {
+      "id": "tool:mrustc",
+      "name": "mrustc",
+      "first_release_year": 2016,
+      "current_primary_implementation_language": "C++",
+      "notes": "Node type: alternative Rust compiler designed for bootstrapping a recent rustc."
+    },
+    {
+      "id": "lang:python",
+      "name": "Python",
+      "first_release_year": 1991,
+      "current_primary_implementation_language": "C (CPython reference implementation)",
+      "notes": "First public releases date to 1991; CPython remains the primary reference implementation."
+    },
+    {
+      "id": "lang:ruby",
+      "name": "Ruby",
+      "first_release_year": 1995,
+      "current_primary_implementation_language": "C and Ruby (CRuby/MRI; includes bytecode components)",
+      "notes": "Ruby's canonical implementation is CRuby/MRI. Ruby 1.9 introduced the YARV-based VM as the official interpreter."
+    },
+    {
+      "id": "lang:ocaml",
+      "name": "OCaml",
+      "first_release_year": 1996,
+      "current_primary_implementation_language": "OCaml and C (compiler/runtime), with some Assembly",
+      "notes": "OCaml's core system includes compilers plus a C runtime; the official repo shows OCaml + C as dominant."
+    },
+    {
+      "id": "lang:haskell",
+      "name": "Haskell",
+      "first_release_year": 1990,
+      "current_primary_implementation_language": "Multiple; GHC is dominant",
+      "notes": "Haskell language first-release year is commonly cited as 1990 (Haskell 1.0). Treat as approximate due to variation across historical summaries."
+    },
+    {
+      "id": "tool:ghc",
+      "name": "GHC",
+      "first_release_year": 1992,
+      "current_primary_implementation_language": "Haskell and C (runtime system)",
+      "notes": "Node type: compiler. GHC is widely cited as implemented largely in Haskell with a C runtime system; primary confirmation varies by component."
+    },
+    {
+      "id": "lang:java",
+      "name": "Java",
+      "first_release_year": 1996,
+      "current_primary_implementation_language": "Java (javac) plus C++ (HotSpot JVM)",
+      "notes": "Java 1.0 public release dated Jan 23, 1996 in Sun/JavaSoft press materials. OpenJDK javac is in Java; HotSpot is in C++."
+    },
+    {
+      "id": "tool:hotspot",
+      "name": "HotSpot JVM",
+      "first_release_year": 1999,
+      "current_primary_implementation_language": "C++",
+      "notes": "Node type: runtime/VM. OpenJDK sources state HotSpot code is written in C++."
+    },
+    {
+      "id": "lang:javascript",
+      "name": "JavaScript",
+      "first_release_year": 1995,
+      "current_primary_implementation_language": "Multiple engines; major engines are primarily C++ (with some Rust in SpiderMonkey)",
+      "notes": "Year is widely cited as 1995 for initial creation; treat as approximate in the absence of a single primary artifact in this dataset."
+    },
+    {
+      "id": "tool:v8",
+      "name": "V8",
+      "first_release_year": 2008,
+      "current_primary_implementation_language": "C++",
+      "notes": "Node type: JavaScript/WebAssembly engine. Official docs describe V8 as written in C++."
+    },
+    {
+      "id": "tool:spidermonkey",
+      "name": "SpiderMonkey",
+      "first_release_year": 1995,
+      "current_primary_implementation_language": "C++ and Rust (plus some JavaScript)",
+      "notes": "Node type: JavaScript/WebAssembly engine. Project docs describe an implementation spanning C++, Rust, and JavaScript."
+    },
+    {
+      "id": "tool:javascriptcore",
+      "name": "JavaScriptCore",
+      "first_release_year": 2001,
+      "current_primary_implementation_language": "C++ (with some C, Assembly, Objective-C integration)",
+      "notes": "Node type: JavaScript engine (WebKit). WebKit docs describe the codebase as mostly C++ with bits of C and assembly, primarily in JavaScriptCore."
+    },
+    {
+      "id": "lang:csharp",
+      "name": "C#",
+      "first_release_year": 2002,
+      "current_primary_implementation_language": "C# (Roslyn compiler) plus C/C++ (runtimes)",
+      "notes": "Microsoft's C# version history lists C# 1.0 released January 2002."
+    },
+    {
+      "id": "tool:dotnet_runtime",
+      "name": ".NET Runtime",
+      "first_release_year": 2002,
+      "current_primary_implementation_language": "C# with significant C++ and C and some Assembly",
+      "notes": "Node type: runtime/standard libraries/tooling. The dotnet/runtime repo language mix shows C# dominant with major C++ and C portions."
+    },
+    {
+      "id": "tool:roslyn",
+      "name": "Roslyn",
+      "first_release_year": 2014,
+      "current_primary_implementation_language": "C# and Visual Basic .NET",
+      "notes": "Node type: C# and VB compiler platform. Repo language stats show primarily C# and VB.NET."
+    },
+    {
+      "id": "lang:kotlin",
+      "name": "Kotlin",
+      "first_release_year": 2016,
+      "current_primary_implementation_language": "Kotlin (compiler), with Java and native components",
+      "notes": "Kotlin 1.0 released Feb 2016. The K2 compiler frontend is a rewrite from scratch (per JetBrains)."
+    },
+    {
+      "id": "lang:swift",
+      "name": "Swift",
+      "first_release_year": 2014,
+      "current_primary_implementation_language": "C++ and Swift (compiler repo mix)",
+      "notes": "Swift was introduced in 2014 and open-sourced Dec 3, 2015. The open-source swiftlang/swift repo shows a near-even C++ and Swift split."
+    }
+  ],
+  "implementations": [],
+  "edges": [
+    {
+      "from_language": "lang:b",
+      "to_language": "lang:c",
+      "relationship": "compiler_written_in",
+      "start_year": 1972,
+      "end_year": 1973,
+      "confidence": 0.75,
+      "evidence_source": "https://www.bell-labs.com/usr/dmr/www/chist.html"
+    },
+    {
+      "from_language": "lang:cxx",
+      "to_language": "lang:cxx",
+      "relationship": "compiler_written_in",
+      "start_year": 1983,
+      "end_year": null,
+      "confidence": 0.8,
+      "evidence_source": "https://www.stroustrup.com/hopl2.pdf"
+    },
+    {
+      "from_language": "lang:cxx",
+      "to_language": "tool:llvm",
+      "relationship": "compiler_written_in",
+      "start_year": 2003,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://llvm.org/docs/GettingStarted.html | https://github.com/llvm/llvm-project"
+    },
+    {
+      "from_language": "lang:cxx",
+      "to_language": "tool:clang",
+      "relationship": "compiler_written_in",
+      "start_year": 2007,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://discourse.llvm.org/t/new-llvm-c-front-end-clang/55248"
+    },
+    {
+      "from_language": "lang:cxx",
+      "to_language": "tool:gcc",
+      "relationship": "compiler_written_in",
+      "start_year": 1987,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://github.com/gcc-mirror/gcc"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "tool:gcc",
+      "relationship": "compiler_written_in",
+      "start_year": 1987,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://github.com/gcc-mirror/gcc"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:go",
+      "relationship": "compiler_written_in",
+      "start_year": 2009,
+      "end_year": 2014,
+      "confidence": 0.9,
+      "evidence_source": "https://go.dev/doc/faq"
+    },
+    {
+      "from_language": "lang:go",
+      "to_language": "lang:go",
+      "relationship": "compiler_written_in",
+      "start_year": 2015,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://go.dev/doc/go1.5 | https://go.dev/blog/go1.5"
+    },
+    {
+      "from_language": "lang:assembly",
+      "to_language": "lang:go",
+      "relationship": "runtime_written_in",
+      "start_year": 2015,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://go.dev/doc/go1.5"
+    },
+    {
+      "from_language": "lang:go",
+      "to_language": "lang:go",
+      "relationship": "runtime_written_in",
+      "start_year": 2015,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://go.dev/doc/go1.5"
+    },
+    {
+      "from_language": "lang:ocaml",
+      "to_language": "lang:rust",
+      "relationship": "compiler_written_in",
+      "start_year": 2006,
+      "end_year": 2009,
+      "confidence": 0.9,
+      "evidence_source": "https://github.com/graydon/rust-prehistory"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:rust",
+      "relationship": "compiler_written_in",
+      "start_year": 2006,
+      "end_year": 2009,
+      "confidence": 0.9,
+      "evidence_source": "https://github.com/graydon/rust-prehistory"
+    },
+    {
+      "from_language": "lang:rust",
+      "to_language": "lang:rust",
+      "relationship": "compiler_written_in",
+      "start_year": 2015,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://github.com/rust-lang/rust"
+    },
+    {
+      "from_language": "lang:machine_code",
+      "to_language": "lang:rust",
+      "relationship": "bootstrap_written_in",
+      "start_year": 2015,
+      "end_year": null,
+      "confidence": 0.85,
+      "evidence_source": "https://rustc-dev-guide.rust-lang.org/building/bootstrapping/what-bootstrapping-does.html"
+    },
+    {
+      "from_language": "lang:cxx",
+      "to_language": "tool:mrustc",
+      "relationship": "compiler_written_in",
+      "start_year": 2016,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://github.com/thepowersgang/mrustc"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:python",
+      "relationship": "runtime_written_in",
+      "start_year": 1991,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://github.com/python/cpython | https://en.wikipedia.org/wiki/History_of_Python"
+    },
+    {
+      "from_language": "lang:python",
+      "to_language": "lang:python",
+      "relationship": "runtime_written_in",
+      "start_year": 1991,
+      "end_year": null,
+      "confidence": 0.85,
+      "evidence_source": "https://github.com/python/cpython"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:ruby",
+      "relationship": "runtime_written_in",
+      "start_year": 1995,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://github.com/ruby/ruby"
+    },
+    {
+      "from_language": "lang:ruby",
+      "to_language": "lang:ruby",
+      "relationship": "runtime_written_in",
+      "start_year": 1995,
+      "end_year": null,
+      "confidence": 0.85,
+      "evidence_source": "https://github.com/ruby/ruby"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:ocaml",
+      "relationship": "runtime_written_in",
+      "start_year": 1996,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://github.com/ocaml/ocaml | https://ocaml.org/docs/using-the-ocaml-compiler-toolchain"
+    },
+    {
+      "from_language": "lang:ocaml",
+      "to_language": "lang:ocaml",
+      "relationship": "compiler_written_in",
+      "start_year": 1996,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://github.com/ocaml/ocaml"
+    },
+    {
+      "from_language": "lang:assembly",
+      "to_language": "lang:ocaml",
+      "relationship": "runtime_written_in",
+      "start_year": 1996,
+      "end_year": null,
+      "confidence": 0.85,
+      "evidence_source": "https://github.com/ocaml/ocaml"
+    },
+    {
+      "from_language": "lang:haskell",
+      "to_language": "lang:haskell",
+      "relationship": "compiler_written_in",
+      "start_year": 1992,
+      "end_year": null,
+      "confidence": 0.7,
+      "evidence_source": "https://en.wikipedia.org/wiki/Glasgow_Haskell_Compiler"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:haskell",
+      "relationship": "runtime_written_in",
+      "start_year": 1992,
+      "end_year": null,
+      "confidence": 0.7,
+      "evidence_source": "https://en.wikipedia.org/wiki/Glasgow_Haskell_Compiler"
+    },
+    {
+      "from_language": "lang:java",
+      "to_language": "lang:java",
+      "relationship": "compiler_written_in",
+      "start_year": 2006,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://github.com/openjdk/jdk/blob/master/src/jdk.compiler/share/classes/com/sun/tools/javac/Main.java"
+    },
+    {
+      "from_language": "lang:cxx",
+      "to_language": "lang:java",
+      "relationship": "runtime_written_in",
+      "start_year": 2006,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://openjdk.org/jeps/8283227"
+    },
+    {
+      "from_language": "lang:cxx",
+      "to_language": "tool:hotspot",
+      "relationship": "runtime_written_in",
+      "start_year": 2006,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://openjdk.org/jeps/8283227"
+    },
+    {
+      "from_language": "lang:cxx",
+      "to_language": "tool:v8",
+      "relationship": "runtime_written_in",
+      "start_year": 2008,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://v8.dev/docs | https://github.com/v8/v8"
+    },
+    {
+      "from_language": "lang:cxx",
+      "to_language": "tool:spidermonkey",
+      "relationship": "runtime_written_in",
+      "start_year": 1995,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://spidermonkey.dev/ | https://firefox-source-docs.mozilla.org/js/index.html"
+    },
+    {
+      "from_language": "lang:rust",
+      "to_language": "tool:spidermonkey",
+      "relationship": "runtime_written_in",
+      "start_year": 2015,
+      "end_year": null,
+      "confidence": 0.85,
+      "evidence_source": "https://spidermonkey.dev/"
+    },
+    {
+      "from_language": "lang:javascript",
+      "to_language": "tool:spidermonkey",
+      "relationship": "runtime_written_in",
+      "start_year": 1995,
+      "end_year": null,
+      "confidence": 0.85,
+      "evidence_source": "https://spidermonkey.dev/"
+    },
+    {
+      "from_language": "lang:cxx",
+      "to_language": "tool:javascriptcore",
+      "relationship": "runtime_written_in",
+      "start_year": 2001,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://docs.webkit.org/Getting%20Started/Introduction.html"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "tool:javascriptcore",
+      "relationship": "runtime_written_in",
+      "start_year": 2001,
+      "end_year": null,
+      "confidence": 0.85,
+      "evidence_source": "https://docs.webkit.org/Getting%20Started/Introduction.html"
+    },
+    {
+      "from_language": "lang:assembly",
+      "to_language": "tool:javascriptcore",
+      "relationship": "runtime_written_in",
+      "start_year": 2001,
+      "end_year": null,
+      "confidence": 0.85,
+      "evidence_source": "https://docs.webkit.org/Getting%20Started/Introduction.html"
+    },
+    {
+      "from_language": "lang:csharp",
+      "to_language": "tool:roslyn",
+      "relationship": "compiler_written_in",
+      "start_year": 2014,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://github.com/dotnet/roslyn"
+    },
+    {
+      "from_language": "lang:csharp",
+      "to_language": "tool:dotnet_runtime",
+      "relationship": "runtime_written_in",
+      "start_year": 2014,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://github.com/dotnet/runtime"
+    },
+    {
+      "from_language": "lang:cxx",
+      "to_language": "tool:dotnet_runtime",
+      "relationship": "runtime_written_in",
+      "start_year": 2014,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://github.com/dotnet/runtime | https://devblogs.microsoft.com/dotnet/coreclr-is-now-open-source/"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "tool:dotnet_runtime",
+      "relationship": "runtime_written_in",
+      "start_year": 2014,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://github.com/dotnet/runtime"
+    },
+    {
+      "from_language": "lang:assembly",
+      "to_language": "tool:dotnet_runtime",
+      "relationship": "runtime_written_in",
+      "start_year": 2014,
+      "end_year": null,
+      "confidence": 0.85,
+      "evidence_source": "https://github.com/dotnet/runtime"
+    },
+    {
+      "from_language": "lang:kotlin",
+      "to_language": "lang:kotlin",
+      "relationship": "compiler_written_in",
+      "start_year": 2016,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://github.com/JetBrains/kotlin"
+    },
+    {
+      "from_language": "lang:java",
+      "to_language": "lang:kotlin",
+      "relationship": "compiler_written_in",
+      "start_year": 2016,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://github.com/JetBrains/kotlin"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:kotlin",
+      "relationship": "runtime_written_in",
+      "start_year": 2016,
+      "end_year": null,
+      "confidence": 0.8,
+      "evidence_source": "https://github.com/JetBrains/kotlin"
+    },
+    {
+      "from_language": "lang:cxx",
+      "to_language": "lang:kotlin",
+      "relationship": "runtime_written_in",
+      "start_year": 2016,
+      "end_year": null,
+      "confidence": 0.8,
+      "evidence_source": "https://github.com/JetBrains/kotlin"
+    },
+    {
+      "from_language": "lang:cxx",
+      "to_language": "lang:swift",
+      "relationship": "compiler_written_in",
+      "start_year": 2015,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://github.com/swiftlang/swift | https://www.apple.com/newsroom/2015/12/03Apple-Releases-Swift-as-Open-Source/"
+    },
+    {
+      "from_language": "lang:swift",
+      "to_language": "lang:swift",
+      "relationship": "compiler_written_in",
+      "start_year": 2015,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://github.com/swiftlang/swift"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:swift",
+      "relationship": "compiler_written_in",
+      "start_year": 2015,
+      "end_year": null,
+      "confidence": 0.85,
+      "evidence_source": "https://github.com/swiftlang/swift"
+    },
+    {
+      "from_language": "lang:machine_code",
+      "to_language": "lang:swift",
+      "relationship": "bootstrap_written_in",
+      "start_year": 2022,
+      "end_year": null,
+      "confidence": 0.8,
+      "evidence_source": "https://github.com/apple/swift/blob/main/SwiftCompilerSources/README.md"
+    }
+  ]
+};
+
+        // ==================== UTILITY FUNCTIONS ====================
+
+        const CLUSTER_COLORS = {
+            'c_family': '#e74c3c',
+            'jvm_dotnet': '#3498db',
+            'js_engines': '#f39c12',
+            'functional': '#9b59b6',
+            'systems': '#1abc9c',
+            'scripting': '#27ae60',
+            'compilers': '#95a5a6',
+            'other': '#34495e'
+        };
+
+        const RELATIONSHIP_COLORS = {
+            'compiler_written_in': '#e74c3c',
+            'runtime_written_in': '#3498db',
+            'bootstrap_written_in': '#2ecc71',
+            'rewritten_in': '#f39c12'
+        };
+
+        function assignCluster(node) {
+            const id = node.id.toLowerCase();
+            const name = node.name.toLowerCase();
+
+            const patterns = [
+                ['c_family', /^(lang:c|lang:cxx|lang:b|lang:bcpl|tool:gcc|tool:clang|tool:llvm)/i],
+                ['jvm_dotnet', /^(lang:java|lang:csharp|lang:kotlin|tool:hotspot|tool:dotnet|tool:roslyn)/i],
+                ['js_engines', /^(lang:javascript|tool:v8|tool:spidermonkey|tool:javascriptcore)/i],
+                ['functional', /^(lang:haskell|lang:ocaml|tool:ghc)/i],
+                ['systems', /^(lang:rust|lang:go|tool:mrustc)/i],
+                ['scripting', /^(lang:python|lang:ruby)/i],
+                ['compilers', /^(tool:gcc|tool:clang|tool:llvm|tool:ghc)/i]
+            ];
+
+            for (const [cluster, pattern] of patterns) {
+                if (pattern.test(id) || pattern.test(name)) {
+                    return cluster;
+                }
+            }
+
+            return 'other';
+        }
+
+        function validateData(data) {
+            const report = {
+                missing_nodes_referenced_by_edges: [],
+                duplicate_ids: [],
+                edges_with_missing_fields: [],
+                nodes_with_missing_fields: [],
+                edges_confidence_lt_0_8: [],
+                summary: {
+                    total_languages: data.languages.length,
+                    total_edges: data.edges.length,
+                    valid_edges: 0,
+                    warnings: 0
+                }
+            };
+
+            const nodeIds = new Set(data.languages.map(l => l.id));
+            const seen = new Set();
+
+            // Check for duplicates
+            for (const lang of data.languages) {
+                if (seen.has(lang.id)) {
+                    report.duplicate_ids.push(lang.id);
+                }
+                seen.add(lang.id);
+            }
+
+            // Validate edges
+            for (const edge of data.edges) {
+                if (!edge.from_language || !edge.to_language || !edge.relationship) {
+                    report.edges_with_missing_fields.push(edge);
+                }
+
+                if (!nodeIds.has(edge.from_language)) {
+                    report.missing_nodes_referenced_by_edges.push(edge.from_language);
+                }
+                if (!nodeIds.has(edge.to_language)) {
+                    report.missing_nodes_referenced_by_edges.push(edge.to_language);
+                }
+
+                if ((edge.confidence || 1.0) < 0.8) {
+                    report.edges_confidence_lt_0_8.push(edge);
+                }
+            }
+
+            // Validate nodes
+            for (const lang of data.languages) {
+                if (!lang.id || !lang.name) {
+                    report.nodes_with_missing_fields.push(lang);
+                }
+            }
+
+            report.summary.valid_edges = data.edges.length - report.edges_with_missing_fields.length;
+            report.summary.warnings = report.duplicate_ids.length + report.missing_nodes_referenced_by_edges.length +
+                                    report.edges_with_missing_fields.length + report.nodes_with_missing_fields.length;
+
+            return report;
+        }
+
+        function normalizeData(data) {
+            // Calculate degrees
+            const degrees = {};
+            const inDegrees = {};
+            const outDegrees = {};
+
+            for (const edge of data.edges) {
+                outDegrees[edge.from_language] = (outDegrees[edge.from_language] || 0) + 1;
+                inDegrees[edge.to_language] = (inDegrees[edge.to_language] || 0) + 1;
+                degrees[edge.from_language] = (degrees[edge.from_language] || 0) + 1;
+                degrees[edge.to_language] = (degrees[edge.to_language] || 0) + 1;
+            }
+
+            // Enrich nodes
+            const enrichedNodes = data.languages.map(node => ({
+                ...node,
+                degree: degrees[node.id] || 0,
+                in_degree: inDegrees[node.id] || 0,
+                out_degree: outDegrees[node.id] || 0,
+                cluster: assignCluster(node)
+            }));
+
+            return {
+                nodes: enrichedNodes,
+                edges: data.edges
+            };
+        }
+
+        // ==================== VALIDATION & NORMALIZATION ====================
+
+        const validationReport = validateData(DATASET);
+        console.log('Validation Report:', validationReport);
+
+        if (validationReport.summary.warnings > 0) {
+            const alertDiv = document.getElementById('validation-alert');
+            alertDiv.className = 'validation-warning';
+            alertDiv.innerHTML = `
+                <strong>⚠️ Validation Warnings: ${validationReport.summary.warnings}</strong>
+                ${validationReport.edges_confidence_lt_0_8.length > 0 ? `<div>• ${validationReport.edges_confidence_lt_0_8.length} edges with confidence < 0.8</div>` : ''}
+                Check console for details.
+            `;
+        }
+
+        const normalized = normalizeData(DATASET);
+
+        // ==================== CYTOSCAPE INITIALIZATION ====================
+
+        function buildElements(data, filters) {
+            const { confidenceThreshold, showSelfLoops, activeRelationships, searchQuery, clusterColoring } = filters;
+
+            let filteredEdges = data.edges.filter(e => {
+                const conf = e.confidence || 1.0;
+                const isSelfLoop = e.from_language === e.to_language;
+                const matchesRel = activeRelationships.includes(e.relationship);
+
+                if (conf < confidenceThreshold) return false;
+                if (isSelfLoop && !showSelfLoops) return false;
+                if (!matchesRel) return false;
+
+                return true;
+            });
+
+            const activeNodeIds = new Set();
+            filteredEdges.forEach(e => {
+                activeNodeIds.add(e.from_language);
+                activeNodeIds.add(e.to_language);
+            });
+
+            let filteredNodes = data.nodes.filter(n => {
+                if (!activeNodeIds.has(n.id) && filteredEdges.length > 0) return false;
+
+                if (searchQuery) {
+                    const query = searchQuery.toLowerCase();
+                    return n.name.toLowerCase().includes(query) || n.id.toLowerCase().includes(query);
+                }
+
+                return true;
+            });
+
+            const nodes = filteredNodes.map(n => ({
+                data: {
+                    id: n.id,
+                    label: n.name,
+                    degree: n.degree,
+                    cluster: n.cluster,
+                    year: n.first_release_year,
+                    implLang: n.current_primary_implementation_language,
+                    notes: n.notes
+                }
+            }));
+
+            const edges = filteredEdges.map((e, idx) => ({
+                data: {
+                    id: `e${idx}`,
+                    source: e.from_language,
+                    target: e.to_language,
+                    relationship: e.relationship,
+                    startYear: e.start_year,
+                    endYear: e.end_year,
+                    confidence: e.confidence || 1.0,
+                    evidence: e.evidence_source
+                }
+            }));
+
+            return [...nodes, ...edges];
+        }
+
+        function getStylesheet(clusterColoring, showAllLabels) {
+            return [
+                {
+                    selector: 'node',
+                    style: {
+                        'label': 'data(label)',
+                        'width': ele => Math.max(20, Math.min(60, ele.data('degree') * 8)),
+                        'height': ele => Math.max(20, Math.min(60, ele.data('degree') * 8)),
+                        'background-color': ele => clusterColoring ? CLUSTER_COLORS[ele.data('cluster')] : '#95a5a6',
+                        'text-valign': 'center',
+                        'text-halign': 'center',
+                        'font-size': '11px',
+                        'font-weight': '600',
+                        'color': '#2d3748',
+                        'text-outline-width': 2,
+                        'text-outline-color': '#fff',
+                        'border-width': 2,
+                        'border-color': '#fff',
+                        'box-shadow': '0 2px 4px rgba(0,0,0,0.2)'
+                    }
+                },
+                {
+                    selector: 'node[degree > 5]',
+                    style: {
+                        'font-size': showAllLabels ? '11px' : '12px',
+                        'z-index': 10
+                    }
+                },
+                {
+                    selector: showAllLabels ? 'node' : 'node[degree <= 5]',
+                    style: {
+                        'label': showAllLabels ? 'data(label)' : ''
+                    }
+                },
+                {
+                    selector: 'edge',
+                    style: {
+                        'width': 2,
+                        'line-color': ele => RELATIONSHIP_COLORS[ele.data('relationship')] || '#95a5a6',
+                        'target-arrow-color': ele => RELATIONSHIP_COLORS[ele.data('relationship')] || '#95a5a6',
+                        'target-arrow-shape': 'triangle',
+                        'curve-style': 'bezier',
+                        'opacity': ele => 0.3 + (ele.data('confidence') * 0.7),
+                        'arrow-scale': 1.2
+                    }
+                },
+                {
+                    selector: 'edge[source = target]',
+                    style: {
+                        'curve-style': 'loop',
+                        'loop-direction': '0deg',
+                        'loop-sweep': '90deg'
+                    }
+                },
+                {
+                    selector: 'node:selected',
+                    style: {
+                        'border-width': 4,
+                        'border-color': '#667eea'
+                    }
+                },
+                {
+                    selector: 'edge:selected',
+                    style: {
+                        'width': 4,
+                        'opacity': 1
+                    }
+                }
+            ];
+        }
+
+        let currentFilters = {
+            confidenceThreshold: 0,
+            showSelfLoops: true,
+            activeRelationships: ['compiler_written_in', 'runtime_written_in', 'bootstrap_written_in', 'rewritten_in'],
+            searchQuery: '',
+            clusterColoring: true
+        };
+
+        let cy = cytoscape({
+            container: document.getElementById('cy'),
+            elements: buildElements(normalized, currentFilters),
+            style: getStylesheet(currentFilters.clusterColoring, false),
+            layout: {
+                name: 'breadthfirst',
+                directed: true,
+                spacingFactor: 1.5,
+                randomize: false,
+                seed: 42
+            },
+            wheelSensitivity: 0.2,
+            minZoom: 0.3,
+            maxZoom: 3
+        });
+
+        // ==================== EVENT HANDLERS ====================
+
+        function updateGraph() {
+            const elements = buildElements(normalized, currentFilters);
+            cy.elements().remove();
+            cy.add(elements);
+            cy.style(getStylesheet(currentFilters.clusterColoring, document.getElementById('show-all-labels').checked));
+
+            // Re-apply current layout
+            const activeLayout = document.querySelector('.button-group button.active').id;
+            if (activeLayout === 'layout-dag') {
+                cy.layout({
+                    name: 'breadthfirst',
+                    directed: true,
+                    spacingFactor: 1.5,
+                    randomize: false,
+                    seed: 42
+                }).run();
+            } else {
+                cy.layout({
+                    name: 'cose-bilkent',
+                    randomize: false,
+                    randomizationSeed: 42,
+                    nodeRepulsion: 4500,
+                    idealEdgeLength: 100,
+                    edgeElasticity: 0.45
+                }).run();
+            }
+        }
+
+        // Layout toggles
+        document.getElementById('layout-dag').addEventListener('click', function() {
+            document.querySelectorAll('.button-group button').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            cy.layout({
+                name: 'breadthfirst',
+                directed: true,
+                spacingFactor: 1.5,
+                randomize: false,
+                seed: 42
+            }).run();
+        });
+
+        document.getElementById('layout-force').addEventListener('click', function() {
+            document.querySelectorAll('.button-group button').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            cy.layout({
+                name: 'cose-bilkent',
+                randomize: false,
+                randomizationSeed: 42,
+                nodeRepulsion: 4500,
+                idealEdgeLength: 100,
+                edgeElasticity: 0.45
+            }).run();
+        });
+
+        // Search
+        document.getElementById('search').addEventListener('input', (e) => {
+            currentFilters.searchQuery = e.target.value;
+            updateGraph();
+        });
+
+        // Confidence slider
+        document.getElementById('confidence').addEventListener('input', (e) => {
+            const value = e.target.value / 100;
+            currentFilters.confidenceThreshold = value;
+            document.getElementById('confidence-value').textContent = value.toFixed(2);
+            updateGraph();
+        });
+
+        // Relationship filters
+        document.querySelectorAll('.rel-filter').forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                currentFilters.activeRelationships = Array.from(document.querySelectorAll('.rel-filter:checked'))
+                    .map(cb => cb.value);
+                updateGraph();
+            });
+        });
+
+        // Self-loops toggle
+        document.getElementById('show-self-loops').addEventListener('change', (e) => {
+            currentFilters.showSelfLoops = e.target.checked;
+            updateGraph();
+        });
+
+        // Cluster coloring toggle
+        document.getElementById('cluster-coloring').addEventListener('change', (e) => {
+            currentFilters.clusterColoring = e.target.checked;
+            cy.style(getStylesheet(currentFilters.clusterColoring, document.getElementById('show-all-labels').checked));
+        });
+
+        // Show all labels toggle
+        document.getElementById('show-all-labels').addEventListener('change', (e) => {
+            cy.style(getStylesheet(currentFilters.clusterColoring, e.target.checked));
+        });
+
+        // ==================== TOOLTIPS ====================
+
+        const tooltip = document.getElementById('tooltip');
+
+        cy.on('mouseover', 'node', (evt) => {
+            const node = evt.target;
+            const pos = evt.renderedPosition;
+
+            tooltip.innerHTML = `
+                <strong>${node.data('label')}</strong>
+                <div>ID: ${node.data('id')}</div>
+                <div>Year: ${node.data('year') || 'N/A'}</div>
+                <div>Impl: ${node.data('implLang')}</div>
+                <div>Degree: ${node.data('degree')} connections</div>
+                ${node.data('notes') ? `<div style="margin-top: 8px; font-size: 11px; opacity: 0.9;">${node.data('notes').substring(0, 200)}${node.data('notes').length > 200 ? '...' : ''}</div>` : ''}
+            `;
+
+            tooltip.style.left = pos.x + 15 + 'px';
+            tooltip.style.top = pos.y - 10 + 'px';
+            tooltip.classList.add('visible');
+        });
+
+        cy.on('mouseover', 'edge', (evt) => {
+            const edge = evt.target;
+            const pos = evt.renderedPosition;
+
+            const years = `${edge.data('startYear')}${edge.data('endYear') ? '-' + edge.data('endYear') : '-present'}`;
+
+            tooltip.innerHTML = `
+                <strong>${edge.data('relationship').replace(/_/g, ' ')}</strong>
+                <div>From: ${edge.data('source')}</div>
+                <div>To: ${edge.data('target')}</div>
+                <div>Years: ${years}</div>
+                <div>Confidence: ${edge.data('confidence').toFixed(2)}</div>
+                ${edge.data('evidence') ? `<div style="margin-top: 8px; font-size: 11px;"><a href="${edge.data('evidence').split('|')[0].trim()}" target="_blank">📚 Evidence</a></div>` : ''}
+            `;
+
+            tooltip.style.left = pos.x + 15 + 'px';
+            tooltip.style.top = pos.y - 10 + 'px';
+            tooltip.classList.add('visible');
+        });
+
+        cy.on('mouseout', 'node, edge', () => {
+            tooltip.classList.remove('visible');
+        });
+
+        // ==================== EXPORT FUNCTIONS ====================
+
+        document.getElementById('export-svg').addEventListener('click', () => {
+            const svgContent = cy.svg({ full: true, scale: 1.5 });
+            const blob = new Blob([svgContent], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'language-lineage.svg';
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+
+        document.getElementById('export-png').addEventListener('click', () => {
+            const png = cy.png({ full: true, scale: 2, bg: 'white' });
+            const a = document.createElement('a');
+            a.href = png;
+            a.download = 'language-lineage.png';
+            a.click();
+        });
+
+        document.getElementById('export-validation').addEventListener('click', () => {
+            const blob = new Blob([JSON.stringify(validationReport, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'validation-report.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+
+        console.log('🎨 Programming Language Lineage Graph loaded successfully!');
+        console.log(`📊 ${normalized.nodes.length} nodes, ${normalized.edges.length} edges`);
+        console.log('⚙️ Use the controls on the left to explore the graph');
+    </script>
+</body>
+</html>
