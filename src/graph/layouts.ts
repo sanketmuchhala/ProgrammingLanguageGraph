@@ -3,20 +3,22 @@ import type { LayoutOptions } from 'cytoscape';
 // Deterministic random seed for reproducible layouts
 const RANDOM_SEED = 42;
 
-// DAG (Directed Acyclic Graph) layout - hierarchical top-down
+// Tree layout - vertical hierarchical (top-down)
 export const DAG_LAYOUT: LayoutOptions = {
   name: 'breadthfirst',
   directed: true,
-  padding: 50,
-  spacingFactor: 1.5,
+  padding: 60,
+  spacingFactor: 1.2, // Reduced for tighter spacing
   avoidOverlap: true,
   nodeDimensionsIncludeLabels: true,
-  animate: false,
+  animate: true,
   animationDuration: 500,
   animationEasing: 'ease-out',
+  roots: undefined, // Auto-detect roots
+  circle: false, // Ensure vertical layout, not circular
 };
 
-// Force-directed layout - organic clustering
+// Network layout - organic clustering with better proportions
 export const FORCE_LAYOUT: any = {
   name: 'cose-bilkent',
   randomize: false,
@@ -26,17 +28,17 @@ export const FORCE_LAYOUT: any = {
   // Quality settings
   quality: 'default',
   nodeDimensionsIncludeLabels: true,
-  // Repulsion and attraction - increased spacing
-  nodeRepulsion: 12000, // Increased for more spacing
-  idealEdgeLength: 150, // Increased for better spread
+  // Repulsion and attraction - better proportions
+  nodeRepulsion: 15000, // Higher repulsion for bigger nodes
+  idealEdgeLength: 100, // Shorter edges to match bigger nodes
   edgeElasticity: 0.45,
   nestingFactor: 0.1,
-  gravity: 0.2, // Reduced gravity for less clumping
+  gravity: 0.25, // Slightly more gravity for cohesion
   numIter: 3000, // More iterations for better layout
   // Deterministic
   randomizationSeed: RANDOM_SEED,
   // Layout boundaries
   tile: true,
-  tilingPaddingVertical: 40,
-  tilingPaddingHorizontal: 40,
+  tilingPaddingVertical: 50,
+  tilingPaddingHorizontal: 50,
 };

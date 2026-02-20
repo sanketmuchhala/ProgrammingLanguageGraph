@@ -1,8 +1,8 @@
 import type { StylesheetStyle } from 'cytoscape';
 import type { ClusterType, RelationshipType } from '../data/types';
 
-// CRITICAL: All nodes MUST be exactly 40px diameter
-const FIXED_NODE_SIZE = 50; // Increased from 40 to 50 for better visibility
+// CRITICAL: All nodes MUST be exactly the same size
+const FIXED_NODE_SIZE = 70; // Larger nodes for better proportions with edges
 
 // Muted color palette (professional earth tones)
 export const CLUSTER_COLORS: Record<ClusterType, string> = {
@@ -44,8 +44,8 @@ export function getCytoscapeStyle(
         'border-width': 3,
         'border-color': '#fff',
         'border-opacity': 0.8,
-        'font-size': '12px',
-        'font-weight': 600 as any,
+        'font-size': '13px',
+        'font-weight': 700 as any,
         'color': '#fff',
         'text-valign': 'center',
         'text-halign': 'center',

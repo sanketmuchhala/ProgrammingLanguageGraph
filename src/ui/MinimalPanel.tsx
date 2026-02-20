@@ -44,13 +44,13 @@ export function MinimalPanel() {
             className={filters.layoutMode === 'dag' ? 'active' : ''}
             onClick={() => handleLayoutChange('dag')}
           >
-            DAG
+            Tree
           </button>
           <button
             className={filters.layoutMode === 'force' ? 'active' : ''}
             onClick={() => handleLayoutChange('force')}
           >
-            Force
+            Network
           </button>
         </div>
       </section>
