@@ -2,20 +2,20 @@ import type { CytoscapeOptions } from 'cytoscape';
 
 export const BASE_CYTOSCAPE_CONFIG: Partial<CytoscapeOptions> = {
   // Zoom and pan settings
-  minZoom: 0.3,
-  maxZoom: 3,
-  wheelSensitivity: 0.2,
+  minZoom: 0.5,
+  maxZoom: 2.5,
+  wheelSensitivity: 0.15,
 
   // Interaction settings
   autoungrabify: false,
   autounselectify: false,
   boxSelectionEnabled: false,
 
-  // Performance
+  // Performance & Quality
   hideEdgesOnViewport: false,
   textureOnViewport: false,
   motionBlur: false,
 
-  // Style
-  pixelRatio: 'auto',
+  // Style - Use high pixel ratio for crisp rendering
+  pixelRatio: 2, // Force 2x for crisp nodes and text
 };

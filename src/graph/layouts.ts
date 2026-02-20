@@ -21,22 +21,22 @@ export const FORCE_LAYOUT: any = {
   name: 'cose-bilkent',
   randomize: false,
   animate: true,
-  animationDuration: 1000,
-  animationEasing: 'ease-out',
+  animationDuration: 1500,
+  animationEasing: 'ease-in-out',
   // Quality settings
   quality: 'default',
   nodeDimensionsIncludeLabels: true,
-  // Repulsion and attraction
-  nodeRepulsion: 8000,
-  idealEdgeLength: 100,
+  // Repulsion and attraction - increased spacing
+  nodeRepulsion: 12000, // Increased for more spacing
+  idealEdgeLength: 150, // Increased for better spread
   edgeElasticity: 0.45,
   nestingFactor: 0.1,
-  gravity: 0.25,
-  numIter: 2500,
+  gravity: 0.2, // Reduced gravity for less clumping
+  numIter: 3000, // More iterations for better layout
   // Deterministic
   randomizationSeed: RANDOM_SEED,
   // Layout boundaries
   tile: true,
-  tilingPaddingVertical: 20,
-  tilingPaddingHorizontal: 20,
+  tilingPaddingVertical: 40,
+  tilingPaddingHorizontal: 40,
 };

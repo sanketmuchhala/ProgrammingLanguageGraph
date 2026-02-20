@@ -2,7 +2,7 @@ import type { StylesheetStyle } from 'cytoscape';
 import type { ClusterType, RelationshipType } from '../data/types';
 
 // CRITICAL: All nodes MUST be exactly 40px diameter
-const FIXED_NODE_SIZE = 40;
+const FIXED_NODE_SIZE = 50; // Increased from 40 to 50 for better visibility
 
 // Muted color palette (professional earth tones)
 export const CLUSTER_COLORS: Record<ClusterType, string> = {
@@ -25,7 +25,7 @@ export const RELATIONSHIP_COLORS: Record<RelationshipType, string> = {
 
 export function getCytoscapeStyle(
   clusterColoring: boolean,
-  showAllLabels: boolean
+  _showAllLabels: boolean // Unused, kept for API compatibility
 ): StylesheetStyle[] {
   return [
     // Base node style - FIXED 40px size
@@ -41,28 +41,23 @@ export function getCytoscapeStyle(
           }
           return '#7d7d7d'; // Default gray if no cluster coloring
         },
-        'border-width': 2,
-        'border-color': '#333',
-        'border-opacity': 0.5,
-        'font-size': '11px',
+        'border-width': 3,
+        'border-color': '#fff',
+        'border-opacity': 0.8,
+        'font-size': '12px',
         'font-weight': 600 as any,
         'color': '#fff',
         'text-valign': 'center',
         'text-halign': 'center',
-        'text-outline-width': 2,
+        'text-outline-width': 3,
         'text-outline-color': '#000',
-        'text-outline-opacity': 0.7,
-        'min-zoomed-font-size': 8,
+        'text-outline-opacity': 0.9,
+        'min-zoomed-font-size': 10,
+        label: 'data(label)', // Always show label
       },
     },
 
-    // Show labels for high-degree nodes (degree > 3) by default
-    {
-      selector: showAllLabels ? 'node' : 'node[degree > 3]',
-      style: {
-        label: 'data(label)',
-      },
-    },
+    // Labels are now always shown in base style above
 
     // Selected node highlight
     {

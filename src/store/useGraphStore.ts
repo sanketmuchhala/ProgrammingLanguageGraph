@@ -43,8 +43,8 @@ const DEFAULT_FILTERS: FilterState = {
   },
   showSelfLoops: false,
   clusterColoring: true,
-  showAllLabels: false,
-  layoutMode: 'dag',
+  showAllLabels: true, // Show all labels by default
+  layoutMode: 'force', // Start with force layout for better visual
 };
 
 export const useGraphStore = create<GraphStore>((set) => ({
