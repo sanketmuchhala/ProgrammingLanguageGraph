@@ -91,3 +91,16 @@
   font-weight: 400;
   white-space: nowrap;
 }
+
+/* Mobile Responsive */
+@media (max-width: 1024px) {
+  .years-panel {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .years-panel {
+    display: none;
+  }
+}

@@ -113,3 +113,27 @@
 .edge-list li:last-child {
   border-bottom: none;
 }
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .side-drawer {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .drawer-header {
+    padding: 16px;
+  }
+
+  .drawer-header h2 {
+    font-size: 16px;
+  }
+
+  .drawer-content {
+    padding: 16px;
+  }
+
+  .drawer-section {
+    margin-bottom: 20px;
+  }
+}

@@ -99,3 +99,45 @@ body {
 .legend-text {
   text-transform: capitalize;
 }
+
+/* Mobile Responsive Layout */
+@media (max-width: 1024px) {
+  .app {
+    grid-template-columns: 280px 1fr;
+  }
+
+  .years-panel {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .app {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+
+  .minimal-panel {
+    width: 100%;
+    height: auto;
+    max-height: 40vh;
+    overflow-y: auto;
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .years-panel {
+    display: none;
+  }
+
+  .graph-container {
+    height: 60vh;
+  }
+
+  .legend {
+    bottom: 10px;
+    right: 10px;
+    max-width: 180px;
+    font-size: 10px;
+  }
+}
