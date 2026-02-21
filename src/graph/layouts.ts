@@ -5,8 +5,8 @@ const RANDOM_SEED = 42;
 export const DAG_LAYOUT: any = {
   name: 'breadthfirst',
   directed: true,
-  padding: 60,
-  spacingFactor: 1.2,
+  padding: 40,
+  spacingFactor: 1.8,
   avoidOverlap: true,
   nodeDimensionsIncludeLabels: true,
   animate: true,
@@ -18,6 +18,7 @@ export const DAG_LAYOUT: any = {
   // FORCE VERTICAL: top-to-bottom flow
   rankDir: 'TB', // TB = Top to Bottom
   ranker: 'network-simplex',
+  fit: true,
 };
 
 // Network layout - organic clustering with better proportions

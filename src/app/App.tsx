@@ -8,6 +8,7 @@ import { GraphView } from '../graph/GraphView';
 import { MinimalPanel } from '../ui/MinimalPanel';
 import { SideDrawer } from '../ui/SideDrawer';
 import { Legend } from '../ui/Legend';
+import { YearsPanel } from '../ui/YearsPanel';
 import './App.css';
 
 function App() {
@@ -47,6 +48,7 @@ function App() {
         <GraphView />
         <Legend />
       </div>
+      <YearsPanel />
       <SideDrawer />
     </div>
   );

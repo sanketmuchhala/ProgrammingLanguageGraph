@@ -44,7 +44,7 @@ export function getCytoscapeStyle(
         'border-width': 3,
         'border-color': '#fff',
         'border-opacity': 0.8,
-        'font-size': '13px',
+        'font-size': '11px',
         'font-weight': 700 as any,
         'color': '#fff',
         'text-valign': 'center',
@@ -54,6 +54,8 @@ export function getCytoscapeStyle(
         'text-outline-opacity': 0.9,
         'min-zoomed-font-size': 10,
         label: 'data(label)', // Always show label
+        'text-wrap': 'wrap' as any,
+        'text-max-width': '80px' as any,
       },
     },
 

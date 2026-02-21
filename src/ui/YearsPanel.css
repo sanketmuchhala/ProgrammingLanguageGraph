@@ -1,0 +1,93 @@
+.years-panel {
+  width: 260px;
+  height: 100%;
+  background-color: #fff;
+  border-left: 1px solid #ddd;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.years-header {
+  padding: 20px 16px 12px 16px;
+  border-bottom: 2px solid #333;
+}
+
+.years-header h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+  color: #333;
+}
+
+.years-sort {
+  display: flex;
+  gap: 6px;
+}
+
+.years-sort button {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.years-sort button:hover {
+  background-color: #f5f5f5;
+}
+
+.years-sort button.active {
+  background-color: #333;
+  color: #fff;
+  border-color: #333;
+}
+
+.years-count {
+  padding: 12px 16px;
+  font-size: 12px;
+  color: #666;
+  border-bottom: 1px solid #eee;
+}
+
+.years-list {
+  flex: 1;
+  overflow-y: auto !important;
+}
+
+.years-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.years-item:hover {
+  background-color: #f8f8f8;
+}
+
+.years-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  margin-right: 12px;
+}
+
+.years-year {
+  font-size: 12px;
+  color: #666;
+  font-weight: 400;
+  white-space: nowrap;
+}
