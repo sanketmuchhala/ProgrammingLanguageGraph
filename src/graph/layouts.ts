@@ -1,21 +1,23 @@
-import type { LayoutOptions } from 'cytoscape';
-
 // Deterministic random seed for reproducible layouts
 const RANDOM_SEED = 42;
 
 // Tree layout - vertical hierarchical (top-down)
-export const DAG_LAYOUT: LayoutOptions = {
+export const DAG_LAYOUT: any = {
   name: 'breadthfirst',
   directed: true,
   padding: 60,
-  spacingFactor: 1.2, // Reduced for tighter spacing
+  spacingFactor: 1.2,
   avoidOverlap: true,
   nodeDimensionsIncludeLabels: true,
   animate: true,
   animationDuration: 500,
   animationEasing: 'ease-out',
-  roots: undefined, // Auto-detect roots
-  circle: false, // Ensure vertical layout, not circular
+  roots: undefined,
+  circle: false,
+  grid: false,
+  // FORCE VERTICAL: top-to-bottom flow
+  rankDir: 'TB', // TB = Top to Bottom
+  ranker: 'network-simplex',
 };
 
 // Network layout - organic clustering with better proportions
