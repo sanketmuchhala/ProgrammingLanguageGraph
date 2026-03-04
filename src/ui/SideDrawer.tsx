@@ -34,6 +34,11 @@ export function SideDrawer() {
         </div>
 
         <div className="drawer-content">
+          {/* TODO: Add language logo once dataset v3 includes logo_url field */}
+          {/* <div className="language-logo">
+            <img src={node.logo_url} alt={`${node.name} logo`} />
+          </div> */}
+
           <section className="drawer-section">
             <h3>Details</h3>
             <p>
@@ -51,6 +56,20 @@ export function SideDrawer() {
               </p>
             )}
           </section>
+
+          {/* TODO: Add usage statistics once dataset includes these fields */}
+          {/* <section className="drawer-section">
+            <h3>Usage Statistics</h3>
+            <p>
+              <strong>Current Users:</strong> {node.current_users?.toLocaleString() || 'N/A'}
+            </p>
+            <p>
+              <strong>Peak Users:</strong> {node.peak_users?.toLocaleString() || 'N/A'}
+            </p>
+            <p>
+              <strong>Peak Year:</strong> {node.peak_year || 'N/A'}
+            </p>
+          </section> */}
 
           {outgoing.length > 0 && (
             <section className="drawer-section">

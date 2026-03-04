@@ -43,9 +43,9 @@ function App() {
 
   return (
     <div className="app">
-      <MinimalPanel />
       <div className="graph-container">
         <GraphView />
+        <MinimalPanel />
         <Legend />
       </div>
       <YearsPanel />

@@ -24,8 +24,8 @@ export const RELATIONSHIP_COLORS: Record<RelationshipType, string> = {
 };
 
 export function getCytoscapeStyle(
-  clusterColoring: boolean,
-  _showAllLabels: boolean // Unused, kept for API compatibility
+  _clusterColoring: boolean,
+  _showAllLabels: boolean
 ): StylesheetStyle[] {
   return [
     // Base node style - FIXED 40px size
@@ -34,13 +34,7 @@ export function getCytoscapeStyle(
       style: {
         width: FIXED_NODE_SIZE,
         height: FIXED_NODE_SIZE,
-        'background-color': (ele: any) => {
-          if (clusterColoring) {
-            const cluster = ele.data('cluster') as ClusterType;
-            return CLUSTER_COLORS[cluster] || CLUSTER_COLORS.other;
-          }
-          return '#7d7d7d'; // Default gray if no cluster coloring
-        },
+        'background-color': '#5a7d8b',
         'border-width': 3,
         'border-color': '#fff',
         'border-opacity': 0.8,

@@ -1,7 +1,7 @@
 .years-panel {
-  width: 260px;
+  width: 300px;
   height: 100%;
-  background-color: #fff;
+  background-color: #fafafa;
   border-left: 1px solid #ddd;
   overflow: hidden;
   display: flex;

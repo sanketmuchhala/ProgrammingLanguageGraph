@@ -42,7 +42,7 @@ const DEFAULT_FILTERS: FilterState = {
     rewritten_in: true,
   },
   showSelfLoops: false,
-  clusterColoring: true,
+  clusterColoring: false,
   showAllLabels: true, // Show all labels by default
   layoutMode: 'force', // Start with force layout for better visual
 };
