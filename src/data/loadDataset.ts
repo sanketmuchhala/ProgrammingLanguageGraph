@@ -2,7 +2,7 @@ import type { RawDataset, DatasetVersion } from './types';
 
 export const DATASET_VERSIONS: DatasetVersion[] = [
   { version: 'v1', path: 'dataset/v1/lineage.json', label: 'Version 1.0 (Initial)' },
-  // Future versions can be added here
+  { version: 'v2', path: 'dataset/v2/lineage.json', label: 'Version 2.0 (Extended)' },
 ];
 
 export async function loadDataset(version: string = 'v1'): Promise<RawDataset> {
