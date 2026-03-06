@@ -195,6 +195,22 @@ export function getCytoscapeStyle(
       },
     },
 
+    // Timeline-hidden nodes
+    {
+      selector: 'node.timeline-hidden',
+      style: {
+        display: 'none' as any,
+      },
+    },
+
+    // Timeline-hidden edges
+    {
+      selector: 'edge.timeline-hidden',
+      style: {
+        display: 'none' as any,
+      },
+    },
+
     // Self-loop edges (special curve)
     {
       selector: 'edge[source = target]',

@@ -12,8 +12,6 @@ body {
 }
 
 .app {
-  display: grid;
-  grid-template-columns: 1fr 300px;
   height: 100vh;
   width: 100vw;
   overflow: hidden;
@@ -21,8 +19,8 @@ body {
 
 .graph-container {
   position: relative;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   overflow: hidden;
 }
 
@@ -139,18 +137,7 @@ body {
 
 
 /* Mobile Responsive Layout */
-@media (max-width: 1024px) {
-  .app {
-    grid-template-columns: 1fr 280px;
-  }
-}
-
 @media (max-width: 768px) {
-  .app {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr;
-  }
-
   .minimal-panel {
     width: 100%;
     height: auto;
@@ -158,14 +145,6 @@ body {
     overflow-y: auto;
     border-right: none;
     border-bottom: 1px solid #ddd;
-  }
-
-  .years-panel {
-    display: none;
-  }
-
-  .graph-container {
-    height: 60vh;
   }
 
   .legend {

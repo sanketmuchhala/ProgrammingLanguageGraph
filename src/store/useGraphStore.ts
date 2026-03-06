@@ -21,6 +21,8 @@ interface GraphStore {
   sideDrawerOpen: boolean;
   hoveredEdgeId: string | null;
   hoveredEdgePosition: { x: number; y: number } | null;
+  timelineYear: number;
+  isTimelinePlaying: boolean;
 
   // Actions
   setDataset: (dataset: NormalizedDataset) => void;
@@ -32,6 +34,8 @@ interface GraphStore {
   setSelectedEdge: (edgeId: string | null) => void;
   setSideDrawerOpen: (open: boolean) => void;
   setHoveredEdge: (edgeId: string | null, position?: { x: number; y: number }) => void;
+  setTimelineYear: (year: number) => void;
+  setIsTimelinePlaying: (playing: boolean) => void;
   resetFilters: () => void;
 }
 
@@ -65,6 +69,8 @@ export const useGraphStore = create<GraphStore>((set) => ({
   sideDrawerOpen: false,
   hoveredEdgeId: null,
   hoveredEdgePosition: null,
+  timelineYear: 2023,
+  isTimelinePlaying: false,
 
   // Actions
   setDataset: (dataset) => set({ dataset }),
@@ -98,6 +104,9 @@ export const useGraphStore = create<GraphStore>((set) => ({
       hoveredEdgeId: edgeId,
       hoveredEdgePosition: position || null,
     }),
+
+  setTimelineYear: (year) => set({ timelineYear: year }),
+  setIsTimelinePlaying: (playing) => set({ isTimelinePlaying: playing }),
 
   resetFilters: () => set({ filters: DEFAULT_FILTERS }),
 }));

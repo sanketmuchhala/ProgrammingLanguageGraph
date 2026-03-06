@@ -70,7 +70,7 @@ export const CLUSTER_LAYOUT: any = {
   padding: 50,
 };
 
-// Timeline layout - vertical tree ordered by first_release_year
+// Timeline layout - horizontal, left=old, right=new
 export function buildTimelineLayout(cy: Core): any {
   const nodes = cy.nodes().filter((n: any) => !n.isParent());
 
@@ -82,23 +82,23 @@ export function buildTimelineLayout(cy: Core): any {
     yearGroups.get(year)!.push(node);
   });
 
-  // Sort years, treating year 0 as just before the earliest real year
+  // Sort years left-to-right (oldest first)
   const sortedYears = [...yearGroups.keys()].sort((a, b) => a - b);
 
-  // Build position map
+  // Build position map: x = year tier, y = lane within tier
   const positions = new Map<string, { x: number; y: number }>();
-  const Y_SPACING = 120;
   const X_SPACING = 150;
+  const Y_SPACING = 100;
 
   sortedYears.forEach((year, tierIndex) => {
     const nodesInYear = yearGroups.get(year)!;
-    const tierWidth = nodesInYear.length * X_SPACING;
-    const startX = -tierWidth / 2;
+    const tierHeight = nodesInYear.length * Y_SPACING;
+    const startY = -tierHeight / 2;
 
-    nodesInYear.forEach((node: any, nodeIndex: number) => {
+    nodesInYear.forEach((node: any, laneIndex: number) => {
       positions.set(node.id(), {
-        x: startX + nodeIndex * X_SPACING + X_SPACING / 2,
-        y: tierIndex * Y_SPACING,
+        x: tierIndex * X_SPACING,
+        y: startY + laneIndex * Y_SPACING + Y_SPACING / 2,
       });
     });
   });

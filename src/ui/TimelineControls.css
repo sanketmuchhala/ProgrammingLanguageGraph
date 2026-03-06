@@ -1,0 +1,121 @@
+.timeline-controls {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  z-index: 200;
+  min-width: 480px;
+  max-width: 700px;
+}
+
+.timeline-year-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.timeline-year-display {
+  font-size: 24px;
+  font-weight: 700;
+  color: #333;
+  min-width: 50px;
+  text-align: center;
+}
+
+.timeline-slider {
+  flex: 1;
+  cursor: pointer;
+  height: 6px;
+}
+
+.timeline-slider:focus-visible {
+  outline: 2px solid #333;
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+.timeline-playback-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.timeline-btn {
+  padding: 6px 16px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.timeline-btn:hover {
+  background-color: #f5f5f5;
+}
+
+.timeline-btn:focus-visible {
+  outline: 2px solid #333;
+  outline-offset: 2px;
+}
+
+.timeline-decade-row {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.timeline-decade-btn {
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 500;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.timeline-decade-btn:hover {
+  background-color: #f5f5f5;
+}
+
+.timeline-decade-btn.active {
+  background-color: #333;
+  color: #fff;
+  border-color: #333;
+}
+
+.timeline-decade-btn:focus-visible {
+  outline: 2px solid #333;
+  outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+  .timeline-controls {
+    min-width: auto;
+    width: calc(100% - 40px);
+    left: 20px;
+    transform: none;
+    padding: 12px;
+    bottom: 10px;
+  }
+
+  .timeline-year-display {
+    font-size: 18px;
+    min-width: 40px;
+  }
+
+  .timeline-decade-btn {
+    font-size: 10px;
+    padding: 3px 6px;
+  }
+}

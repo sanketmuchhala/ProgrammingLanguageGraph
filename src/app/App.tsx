@@ -9,7 +9,8 @@ import { MinimalPanel } from '../ui/MinimalPanel';
 import { SideDrawer } from '../ui/SideDrawer';
 import { Legend } from '../ui/Legend';
 import { EdgeTooltip } from '../ui/EdgeTooltip';
-import { YearsPanel } from '../ui/YearsPanel';
+import { TimelineControls } from '../ui/TimelineControls';
+
 import './App.css';
 
 function App() {
@@ -49,8 +50,8 @@ function App() {
         <MinimalPanel />
         <Legend />
         <EdgeTooltip />
+        <TimelineControls />
       </div>
-      <YearsPanel />
       <SideDrawer />
     </div>
   );

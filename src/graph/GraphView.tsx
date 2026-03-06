@@ -6,7 +6,7 @@ import { buildCytoscapeElements } from './buildElements';
 import { getCytoscapeStyle } from './style';
 import { BASE_CYTOSCAPE_CONFIG } from './cytoscapeConfig';
 import { DAG_LAYOUT, FORCE_LAYOUT, CLUSTER_LAYOUT, buildTimelineLayout } from './layouts';
-import { activateFocusMode, deactivateFocusMode } from './selectors';
+import { activateFocusMode, deactivateFocusMode, applyTimelineVisibility, clearTimelineVisibility } from './selectors';
 import './GraphView.css';
 
 // Register cose-bilkent layout
@@ -165,6 +165,17 @@ export function GraphView() {
     const layout = getLayout(filters.layoutMode, cy);
     cy.layout(layout).run();
   }, [cy, filters.layoutMode]);
+
+  // Timeline year visibility (lightweight class toggling, no relayout)
+  const timelineYear = useGraphStore((s) => s.timelineYear);
+  useEffect(() => {
+    if (!cy) return;
+    if (filters.layoutMode === 'timeline') {
+      applyTimelineVisibility(cy, timelineYear);
+    } else {
+      clearTimelineVisibility(cy);
+    }
+  }, [cy, timelineYear, filters.layoutMode]);
 
   return <div ref={containerRef} className="graph-view" />;
 }
