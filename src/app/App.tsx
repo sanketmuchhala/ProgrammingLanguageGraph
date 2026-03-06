@@ -18,7 +18,7 @@ function App() {
     async function initializeDataset() {
       try {
         console.log('Loading dataset...');
-        const rawDataset = await loadDataset('v2');
+        const rawDataset = await loadDataset('v4');
 
         console.log('Validating dataset...');
         const validationReport = validateDataset(rawDataset);

@@ -6,6 +6,7 @@ const FIXED_NODE_SIZE = 70; // Larger nodes for better proportions with edges
 
 // Muted color palette (professional earth tones)
 export const CLUSTER_COLORS: Record<ClusterType, string> = {
+  // v2 clusters (legacy)
   c_family: '#8b5a5a',      // Muted red-brown
   jvm_dotnet: '#5a7d8b',    // Muted blue
   js_engines: '#8b7d5a',    // Muted orange-brown
@@ -14,6 +15,14 @@ export const CLUSTER_COLORS: Record<ClusterType, string> = {
   scripting: '#5a8b6b',     // Muted green
   compilers: '#7d7d7d',     // Muted gray
   other: '#545454',         // Dark gray
+  // v4 clusters
+  clr: '#5a7d8b',           // Muted blue (similar to jvm_dotnet)
+  dynamic: '#5a8b6b',       // Muted green (similar to scripting)
+  historical: '#8b7d5a',    // Muted orange-brown
+  jvm: '#5a7d8b',           // Muted blue
+  roots: '#7d7d7d',         // Muted gray
+  scientific: '#6b5a8b',    // Muted purple
+  tools: '#7d7d7d',         // Muted gray
 };
 
 export const RELATIONSHIP_COLORS: Record<RelationshipType, string> = {
@@ -21,6 +30,9 @@ export const RELATIONSHIP_COLORS: Record<RelationshipType, string> = {
   runtime_written_in: '#5a7d9b',     // Muted blue
   bootstrap_written_in: '#5a9b7d',   // Muted green
   rewritten_in: '#9b7d5a',           // Muted orange
+  influenced: '#8b8b5a',             // Muted yellow
+  influenced_by: '#8b8b5a',          // Muted yellow (same as influenced)
+  transpiled_to: '#9b5a9b',          // Muted purple
 };
 
 export function getCytoscapeStyle(

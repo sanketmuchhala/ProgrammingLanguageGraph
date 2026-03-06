@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "analyze": "tsx scripts/analyzeDataset.ts",
+    "analyze:v4": "tsx scripts/analyzeDataset.ts dataset/v4/lineage_v4.json"
   },
   "dependencies": {
     "@types/react-window": "^1.8.8",
@@ -23,7 +25,9 @@
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
+    "tsx": "^4.7.1",
     "typescript": "^5.5.3",
-    "vite": "^5.4.1"
+    "vite": "^5.4.1",
+    "zod": "^3.23.8"
   }
 }
