@@ -9,7 +9,7 @@ import './MinimalPanel.css';
 export function MinimalPanel() {
   const { filters, validationReport, updateFilters } = useGraphStore();
 
-  const handleLayoutChange = (mode: 'dag' | 'force') => {
+  const handleLayoutChange = (mode: 'dag' | 'force' | 'cluster' | 'timeline') => {
     updateFilters({ layoutMode: mode });
   };
 
@@ -41,16 +41,28 @@ export function MinimalPanel() {
         <h3>Layout</h3>
         <div className="layout-toggle">
           <button
+            className={filters.layoutMode === 'force' ? 'active' : ''}
+            onClick={() => handleLayoutChange('force')}
+          >
+            Network
+          </button>
+          <button
             className={filters.layoutMode === 'dag' ? 'active' : ''}
             onClick={() => handleLayoutChange('dag')}
           >
             Tree
           </button>
           <button
-            className={filters.layoutMode === 'force' ? 'active' : ''}
-            onClick={() => handleLayoutChange('force')}
+            className={filters.layoutMode === 'cluster' ? 'active' : ''}
+            onClick={() => handleLayoutChange('cluster')}
           >
-            Network
+            Cluster
+          </button>
+          <button
+            className={filters.layoutMode === 'timeline' ? 'active' : ''}
+            onClick={() => handleLayoutChange('timeline')}
+          >
+            Timeline
           </button>
         </div>
       </section>

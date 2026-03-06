@@ -63,6 +63,8 @@ body {
 
 .legend-content {
   margin-top: 12px;
+  max-height: 400px;
+  overflow-y: auto;
 }
 
 .legend-section {
@@ -99,6 +101,42 @@ body {
 .legend-text {
   text-transform: capitalize;
 }
+
+.legend-line {
+  display: inline-block;
+  width: 24px;
+  height: 0;
+  border-top: 2px solid #666;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+.legend-line-dashed {
+  border-top-style: dashed;
+}
+
+.legend-line-dotted {
+  border-top-style: dotted;
+}
+
+.legend-circle {
+  display: inline-block;
+  border-radius: 50%;
+  background-color: #5a7d8b;
+  border: 1px solid #ddd;
+  flex-shrink: 0;
+}
+
+.legend-circle-small {
+  width: 14px;
+  height: 14px;
+}
+
+.legend-circle-large {
+  width: 24px;
+  height: 24px;
+}
+
 
 /* Mobile Responsive Layout */
 @media (max-width: 1024px) {

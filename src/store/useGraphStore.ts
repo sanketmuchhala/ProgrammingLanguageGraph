@@ -19,6 +19,8 @@ interface GraphStore {
   selectedNodeId: string | null;
   selectedEdgeId: string | null;
   sideDrawerOpen: boolean;
+  hoveredEdgeId: string | null;
+  hoveredEdgePosition: { x: number; y: number } | null;
 
   // Actions
   setDataset: (dataset: NormalizedDataset) => void;
@@ -29,6 +31,7 @@ interface GraphStore {
   setSelectedNode: (nodeId: string | null) => void;
   setSelectedEdge: (edgeId: string | null) => void;
   setSideDrawerOpen: (open: boolean) => void;
+  setHoveredEdge: (edgeId: string | null, position?: { x: number; y: number }) => void;
   resetFilters: () => void;
 }
 
@@ -45,7 +48,7 @@ const DEFAULT_FILTERS: FilterState = {
     transpiled_to: true,
   },
   showSelfLoops: false,
-  clusterColoring: false,
+  clusterColoring: true,
   showAllLabels: true, // Show all labels by default
   layoutMode: 'force', // Start with force layout for better visual
 };
@@ -60,6 +63,8 @@ export const useGraphStore = create<GraphStore>((set) => ({
   selectedNodeId: null,
   selectedEdgeId: null,
   sideDrawerOpen: false,
+  hoveredEdgeId: null,
+  hoveredEdgePosition: null,
 
   // Actions
   setDataset: (dataset) => set({ dataset }),
@@ -87,6 +92,12 @@ export const useGraphStore = create<GraphStore>((set) => ({
     }),
 
   setSideDrawerOpen: (open) => set({ sideDrawerOpen: open }),
+
+  setHoveredEdge: (edgeId, position) =>
+    set({
+      hoveredEdgeId: edgeId,
+      hoveredEdgePosition: position || null,
+    }),
 
   resetFilters: () => set({ filters: DEFAULT_FILTERS }),
 }));

@@ -76,6 +76,9 @@ export function buildCytoscapeElements(
     nodesWithEdges.add(edge.data.target);
   }
 
+  const isClusterLayout = filters.layoutMode === 'cluster';
+  const clusterSet = new Set<string>();
+
   for (const lang of dataset.languages) {
     // Include node if it matches search OR has visible edges
     if (visibleNodes.has(lang.id) || nodesWithEdges.has(lang.id)) {
@@ -89,10 +92,25 @@ export function buildCytoscapeElements(
           notes: lang.notes,
           degree: lang.degree,
           cluster: lang.cluster,
+          parent: isClusterLayout ? `cluster:${lang.cluster}` : undefined,
         },
         group: 'nodes',
       };
       elements.push(node);
+
+      if (isClusterLayout) {
+        clusterSet.add(lang.cluster);
+      }
+    }
+  }
+
+  // Add compound parent nodes for cluster layout
+  if (isClusterLayout) {
+    for (const cluster of clusterSet) {
+      elements.push({
+        data: { id: `cluster:${cluster}`, label: cluster.replace(/_/g, ' ') },
+        group: 'nodes',
+      } as any);
     }
   }
 

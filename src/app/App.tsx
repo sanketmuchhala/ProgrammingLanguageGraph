@@ -8,6 +8,7 @@ import { GraphView } from '../graph/GraphView';
 import { MinimalPanel } from '../ui/MinimalPanel';
 import { SideDrawer } from '../ui/SideDrawer';
 import { Legend } from '../ui/Legend';
+import { EdgeTooltip } from '../ui/EdgeTooltip';
 import { YearsPanel } from '../ui/YearsPanel';
 import './App.css';
 
@@ -47,6 +48,7 @@ function App() {
         <GraphView />
         <MinimalPanel />
         <Legend />
+        <EdgeTooltip />
       </div>
       <YearsPanel />
       <SideDrawer />

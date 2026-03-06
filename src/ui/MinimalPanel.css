@@ -87,16 +87,17 @@
 
 .layout-toggle {
   display: flex;
-  gap: 8px;
+  flex-wrap: wrap;
+  gap: 6px;
 }
 
 .layout-toggle button {
-  flex: 1;
-  padding: 8px 12px;
+  flex: 1 1 40%;
+  padding: 6px 8px;
   border: 1px solid #ddd;
   background-color: #fff;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
   border-radius: 4px;
   transition: all 0.2s;

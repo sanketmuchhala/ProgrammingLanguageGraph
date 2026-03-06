@@ -1,0 +1,32 @@
+.edge-tooltip {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.85);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  line-height: 1.6;
+  z-index: 500;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.edge-tooltip-header {
+  font-weight: 600;
+}
+
+.edge-tooltip-relationship {
+  color: #aaa;
+  font-size: 11px;
+  padding: 2px 0;
+}
+
+.edge-tooltip-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 11px;
+  color: #ccc;
+  margin-top: 4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  padding-top: 4px;
+}

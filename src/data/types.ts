@@ -109,7 +109,7 @@ export interface FilterState {
   showSelfLoops: boolean;
   clusterColoring: boolean;
   showAllLabels: boolean;
-  layoutMode: 'dag' | 'force';
+  layoutMode: 'dag' | 'force' | 'cluster' | 'timeline';
 }
 
 // Cytoscape element types
@@ -122,6 +122,7 @@ export interface CytoscapeNodeData {
   notes: string | null;
   degree: number;
   cluster: ClusterType;
+  parent?: string;
 }
 
 export interface CytoscapeEdgeData {
