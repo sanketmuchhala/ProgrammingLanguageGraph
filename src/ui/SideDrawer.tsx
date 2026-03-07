@@ -1,9 +1,10 @@
 import { useGraphStore } from '../store/useGraphStore';
-import { LOGO_MAP } from '../data/logoMap';
+import { LOGO_MAP, LOGO_COLORS } from '../data/logoMap';
+import { getAdaptiveLogoBackground, getLogoBorderColor } from '../utils/colorContrast';
 import './SideDrawer.css';
 
 export function SideDrawer() {
-  const { dataset, datasetIndex, selectedNodeId, selectedEdgeId, sideDrawerOpen, setSideDrawerOpen, explorationMode, setExplorationMode } =
+  const { dataset, datasetIndex, selectedNodeId, selectedEdgeId, sideDrawerOpen, setSideDrawerOpen, explorationMode, setExplorationMode, isDarkMode } =
     useGraphStore();
 
   if (!sideDrawerOpen || !dataset) {
@@ -26,7 +27,9 @@ export function SideDrawer() {
     const outgoing = datasetIndex?.outgoingEdges.get(selectedNodeId) || [];
 
     return (
-      <div className="side-drawer">
+      <>
+        <div className="side-drawer-backdrop visible" onClick={handleClose} />
+        <div className="side-drawer">
         <div className="drawer-header">
           <h2>{node.name}</h2>
           <button className="drawer-close" onClick={handleClose}>
@@ -35,11 +38,23 @@ export function SideDrawer() {
         </div>
 
         <div className="drawer-content">
-          {LOGO_MAP[selectedNodeId] && (
-            <div className="language-logo">
-              <img src={LOGO_MAP[selectedNodeId]!} alt={`${node.name} logo`} />
-            </div>
-          )}
+          {LOGO_MAP[selectedNodeId] && (() => {
+            const logoColor = LOGO_COLORS[selectedNodeId] || null;
+            const logoBg = getAdaptiveLogoBackground(logoColor, isDarkMode);
+            const logoBorder = getLogoBorderColor(logoColor, isDarkMode);
+
+            return (
+              <div
+                className="language-logo"
+                style={{
+                  backgroundColor: logoBg,
+                  borderColor: logoBorder
+                }}
+              >
+                <img src={LOGO_MAP[selectedNodeId]!} alt={`${node.name} logo`} />
+              </div>
+            );
+          })()}
 
           <section className="drawer-section">
             <h3>Details</h3>
@@ -152,6 +167,7 @@ export function SideDrawer() {
           )}
         </div>
       </div>
+      </>
     );
   }
 
@@ -167,7 +183,9 @@ export function SideDrawer() {
     const targetNode = dataset.languageMap.get(edge.to_language);
 
     return (
-      <div className="side-drawer">
+      <>
+        <div className="side-drawer-backdrop visible" onClick={handleClose} />
+        <div className="side-drawer">
         <div className="drawer-header">
           <h2>Edge Details</h2>
           <button className="drawer-close" onClick={handleClose}>
@@ -218,6 +236,7 @@ export function SideDrawer() {
           )}
         </div>
       </div>
+      </>
     );
   }
 

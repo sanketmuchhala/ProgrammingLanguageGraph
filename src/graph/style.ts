@@ -1,5 +1,6 @@
 import type { StylesheetStyle } from 'cytoscape';
 import type { ClusterType, RelationshipType } from '../data/types';
+import { getAdaptiveLogoBackground, getLogoBorderColor } from '../utils/colorContrast';
 
 const MIN_NODE_SIZE = 50;
 const MAX_NODE_SIZE = 110;
@@ -85,55 +86,50 @@ export function getCytoscapeStyle(
       },
     },
 
-    // TODO: Logo display in graph nodes - commented out for now, will show logos in sidebar instead
-    // Nodes with logos: use logo's dominant color as background
-    // {
-    //   selector: 'node[logoUrl][logoColor]',
-    //   style: {
-    //     'background-color': ((ele: any) => {
-    //       const logoColor = ele.data('logoColor');
-    //       if (!logoColor) {
-    //         // No color defined - use inverted theme color for contrast
-    //         return isDarkMode ? '#ffffff' : '#1c2128';
-    //       }
-    //       return logoColor;
-    //     }) as any,
-    //     'background-image': 'data(logoUrl)' as any,
-    //     'background-fit': 'contain' as any,
-    //     'background-clip': 'node' as any,
-    //     'background-width': '80%' as any,
-    //     'background-height': '80%' as any,
-    //     'background-image-opacity': 1,
-    //     'background-position-x': '50%' as any,
-    //     'background-position-y': '50%' as any,
-    //     'background-offset-x': 0,
-    //     'background-offset-y': 0,
-    //     'border-width': 2,
-    //     'border-color': isDarkMode ? '#ffffff20' : '#00000015',
-    //     'border-opacity': 1,
-    //   },
-    // },
+    // Logo nodes - seamless integration with background
+    {
+      selector: 'node[logoUrl]',
+      style: {
+        'background-color': ((ele: any) => {
+          const logoColor = ele.data('logoColor');
+          return getAdaptiveLogoBackground(logoColor, isDarkMode);
+        }) as any,
 
-    // Nodes with logos but no logoColor defined: use inverted theme color
-    // {
-    //   selector: 'node[logoUrl][!logoColor]',
-    //   style: {
-    //     'background-color': isDarkMode ? '#ffffff' : '#1c2128',
-    //     'background-image': 'data(logoUrl)' as any,
-    //     'background-fit': 'contain' as any,
-    //     'background-clip': 'node' as any,
-    //     'background-width': '80%' as any,
-    //     'background-height': '80%' as any,
-    //     'background-image-opacity': 1,
-    //     'background-position-x': '50%' as any,
-    //     'background-position-y': '50%' as any,
-    //     'background-offset-x': 0,
-    //     'background-offset-y': 0,
-    //     'border-width': 2,
-    //     'border-color': isDarkMode ? '#30363d' : '#e2e5e9',
-    //     'border-opacity': 1,
-    //   },
-    // },
+        // Display full logo, filling the node
+        'background-image': 'data(logoUrl)' as any,
+        'background-fit': 'contain' as any,
+        'background-width': '100%' as any,
+        'background-height': '100%' as any,
+        'background-position-x': '50%' as any,
+        'background-position-y': '50%' as any,
+        'background-repeat': 'no-repeat' as any,
+        'background-image-opacity': 1,
+        'background-clip': 'node' as any,
+
+        // Subtle border for definition
+        'border-width': 2.5,
+        'border-color': ((ele: any) => {
+          const logoColor = ele.data('logoColor');
+          return getLogoBorderColor(logoColor, isDarkMode);
+        }) as any,
+        'border-opacity': 1,
+
+        // Smooth transitions
+        'transition-property': 'border-width, border-color, border-opacity' as any,
+        'transition-duration': '0.2s' as any,
+        'transition-timing-function': 'ease-out' as any,
+      },
+    },
+
+    // Logo node hover effect
+    {
+      selector: 'node[logoUrl].hovered',
+      style: {
+        'border-width': 3.5,
+        'border-opacity': 0.9,
+        'z-index': 1001,
+      },
+    },
 
     // Compound parent nodes (cluster layout)
     {

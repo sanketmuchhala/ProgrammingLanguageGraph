@@ -70,17 +70,22 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  padding: 24px;
   margin-bottom: 20px;
-  background-color: var(--bg-canvas);
-  border-radius: 12px;
-  border: 1px solid var(--border-secondary);
+  border-radius: 16px;
+  border: 2px solid;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.language-logo:hover {
+  transform: scale(1.02);
 }
 
 .language-logo img {
-  max-width: 80px;
-  max-height: 80px;
+  max-width: 96px;
+  max-height: 96px;
   object-fit: contain;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.1));
 }
 
 .drawer-section {
@@ -185,15 +190,43 @@
   border-color: var(--accent);
 }
 
+/* Backdrop overlay for mobile */
+.side-drawer-backdrop {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.side-drawer-backdrop.visible {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 /* Mobile Responsive */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .side-drawer {
-    width: 100%;
+    width: 90%;
     max-width: 400px;
+    box-shadow: -4px 0 24px rgba(0, 0, 0, 0.3);
   }
 
   .drawer-header {
     padding: 16px;
+    padding-right: 56px; /* Space for mobile close button */
   }
 
   .drawer-header h2 {
@@ -206,5 +239,22 @@
 
   .drawer-section {
     margin-bottom: 20px;
+  }
+
+  .language-logo {
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+
+  .language-logo img {
+    max-width: 80px;
+    max-height: 80px;
+  }
+}
+
+/* Desktop-only: backdrop hidden */
+@media (min-width: 768px) {
+  .side-drawer-backdrop {
+    display: none !important;
   }
 }
