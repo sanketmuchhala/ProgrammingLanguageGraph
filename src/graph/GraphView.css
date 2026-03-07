@@ -4,4 +4,24 @@
   background-color: var(--bg-canvas);
   position: relative;
   transition: background-color 0.2s;
+  /* Enable touch actions for mobile pan/zoom */
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .graph-view {
+    /* Ensure graph takes full screen on mobile */
+    width: 100vw;
+    height: 100vh;
+  }
+}
+
+/* Prevent text selection and tap highlighting during touch interactions */
+@media (hover: none) and (pointer: coarse) {
+  .graph-view {
+    -webkit-tap-highlight-color: transparent;
+  }
 }

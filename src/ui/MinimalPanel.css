@@ -23,25 +23,82 @@
 
 @media (max-width: 768px) {
   .minimal-panel {
-    width: 100%;
+    width: calc(100% - 20px);
     height: auto;
-    padding: 16px;
+    padding: 12px;
+    max-height: 50vh;
+    top: 10px;
+    left: 10px;
+    right: 10px;
   }
 
   .panel-header {
-    margin-bottom: 16px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
   }
 
   .panel-header h1 {
-    font-size: 18px;
+    font-size: 16px;
   }
 
   .panel-header p {
-    font-size: 12px;
+    font-size: 11px;
   }
 
   .panel-section {
-    margin-bottom: 16px;
+    margin-bottom: 12px;
+  }
+
+  /* Touch-friendly buttons (minimum 44px tap targets) */
+  .layout-toggle button {
+    min-height: 44px;
+    padding: 10px 8px;
+    font-size: 13px;
+  }
+
+  .theme-toggle {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 10px;
+  }
+
+  /* Compact search box */
+  .search-box {
+    min-height: 44px;
+    font-size: 14px;
+  }
+
+  /* Compact filter chips */
+  .filter-chip {
+    padding: 8px 12px;
+    font-size: 12px;
+    min-height: 36px;
+  }
+
+  /* Hide description on small screens for more space */
+  .panel-header-text p {
+    display: none;
+  }
+}
+
+/* Extra small mobile devices */
+@media (max-width: 480px) {
+  .minimal-panel {
+    padding: 10px;
+    max-height: 60vh;
+  }
+
+  .panel-section h3 {
+    font-size: 13px;
+  }
+
+  .layout-toggle {
+    gap: 4px;
+  }
+
+  .layout-toggle button {
+    font-size: 11px;
+    padding: 8px 6px;
   }
 }
 
