@@ -23,6 +23,9 @@ interface GraphStore {
   hoveredEdgePosition: { x: number; y: number } | null;
   timelineYear: number;
   isTimelinePlaying: boolean;
+  explorationMode: 'none' | 'ancestors' | 'descendants' | 'focus';
+  attributeFilters: { paradigms: string[]; typing: string | null; decade: number | null };
+  isDarkMode: boolean;
 
   // Actions
   setDataset: (dataset: NormalizedDataset) => void;
@@ -36,7 +39,11 @@ interface GraphStore {
   setHoveredEdge: (edgeId: string | null, position?: { x: number; y: number }) => void;
   setTimelineYear: (year: number) => void;
   setIsTimelinePlaying: (playing: boolean) => void;
+  setExplorationMode: (mode: 'none' | 'ancestors' | 'descendants' | 'focus') => void;
+  setAttributeFilters: (filters: Partial<{ paradigms: string[]; typing: string | null; decade: number | null }>) => void;
+  resetAttributeFilters: () => void;
   resetFilters: () => void;
+  toggleDarkMode: () => void;
 }
 
 const DEFAULT_FILTERS: FilterState = {
@@ -53,7 +60,7 @@ const DEFAULT_FILTERS: FilterState = {
   },
   showSelfLoops: false,
   clusterColoring: true,
-  showAllLabels: true, // Show all labels by default
+  showAllLabels: false, // Progressive disclosure by default; toggle on for all labels
   layoutMode: 'force', // Start with force layout for better visual
 };
 
@@ -71,6 +78,9 @@ export const useGraphStore = create<GraphStore>((set) => ({
   hoveredEdgePosition: null,
   timelineYear: 2023,
   isTimelinePlaying: false,
+  explorationMode: 'none',
+  attributeFilters: { paradigms: [], typing: null, decade: null },
+  isDarkMode: false,
 
   // Actions
   setDataset: (dataset) => set({ dataset }),
@@ -84,11 +94,12 @@ export const useGraphStore = create<GraphStore>((set) => ({
     })),
 
   setSelectedNode: (nodeId) =>
-    set({
+    set((state) => ({
       selectedNodeId: nodeId,
       selectedEdgeId: null,
       sideDrawerOpen: nodeId !== null,
-    }),
+      explorationMode: nodeId === null ? 'none' as const : state.explorationMode,
+    })),
 
   setSelectedEdge: (edgeId) =>
     set({
@@ -108,5 +119,19 @@ export const useGraphStore = create<GraphStore>((set) => ({
   setTimelineYear: (year) => set({ timelineYear: year }),
   setIsTimelinePlaying: (playing) => set({ isTimelinePlaying: playing }),
 
+  setExplorationMode: (mode) => set({ explorationMode: mode }),
+  setAttributeFilters: (filters) =>
+    set((state) => ({
+      attributeFilters: { ...state.attributeFilters, ...filters },
+    })),
+  resetAttributeFilters: () =>
+    set({ attributeFilters: { paradigms: [], typing: null, decade: null } }),
+
   resetFilters: () => set({ filters: DEFAULT_FILTERS }),
+  toggleDarkMode: () =>
+    set((state) => {
+      const next = !state.isDarkMode;
+      document.documentElement.classList.toggle('dark', next);
+      return { isDarkMode: next };
+    }),
 }));

@@ -6,7 +6,7 @@ import { buildCytoscapeElements } from './buildElements';
 import { getCytoscapeStyle } from './style';
 import { BASE_CYTOSCAPE_CONFIG } from './cytoscapeConfig';
 import { DAG_LAYOUT, FORCE_LAYOUT, CLUSTER_LAYOUT, buildTimelineLayout } from './layouts';
-import { activateFocusMode, deactivateFocusMode, applyTimelineVisibility, clearTimelineVisibility } from './selectors';
+import { activateFocusMode, deactivateFocusMode, applyTimelineVisibility, clearTimelineVisibility, getAncestors, getDescendants, activateExplorationMode, applyAttributeFilters } from './selectors';
 import './GraphView.css';
 
 // Register cose-bilkent layout
@@ -40,7 +40,8 @@ export function GraphView() {
     }
 
     const elements = buildCytoscapeElements(dataset, filters);
-    const style = getCytoscapeStyle(filters.clusterColoring, filters.showAllLabels);
+    const { isDarkMode } = useGraphStore.getState();
+    const style = getCytoscapeStyle(filters.clusterColoring, filters.showAllLabels, isDarkMode);
     const layout = getLayout(filters.layoutMode);
 
     const instance = cytoscape({
@@ -114,11 +115,17 @@ export function GraphView() {
 
       const zoom = instance.zoom();
       instance.batch(() => {
-        if (zoom < 0.6) {
+        if (zoom < 0.3) {
           instance.nodes().addClass('labels-hidden');
-        } else if (zoom <= 1.2) {
+        } else if (zoom < 0.5) {
+          instance.nodes().filter('[degree < 15]').addClass('labels-hidden');
+          instance.nodes().filter('[degree >= 15]').removeClass('labels-hidden');
+        } else if (zoom < 0.8) {
           instance.nodes().filter('[degree < 8]').addClass('labels-hidden');
           instance.nodes().filter('[degree >= 8]').removeClass('labels-hidden');
+        } else if (zoom <= 1.2) {
+          instance.nodes().filter('[degree < 4]').addClass('labels-hidden');
+          instance.nodes().filter('[degree >= 4]').removeClass('labels-hidden');
         } else {
           instance.nodes().removeClass('labels-hidden');
         }
@@ -140,21 +147,22 @@ export function GraphView() {
     };
   }, [dataset, setCytoscape, setSelectedNode, setSelectedEdge]);
 
-  // Update graph when filters change
+  // Update graph when filters or theme change
+  const isDarkMode = useGraphStore((s) => s.isDarkMode);
   useEffect(() => {
     if (!cy || !dataset) {
       return;
     }
 
     const elements = buildCytoscapeElements(dataset, filters);
-    const style = getCytoscapeStyle(filters.clusterColoring, filters.showAllLabels);
+    const style = getCytoscapeStyle(filters.clusterColoring, filters.showAllLabels, isDarkMode);
 
     cy.style(style);
     cy.json({ elements });
 
     // Deactivate focus mode when filters change
     deactivateFocusMode(cy);
-  }, [cy, dataset, filters]);
+  }, [cy, dataset, filters, isDarkMode]);
 
   // Update layout when layout mode changes
   useEffect(() => {
@@ -176,6 +184,40 @@ export function GraphView() {
       clearTimelineVisibility(cy);
     }
   }, [cy, timelineYear, filters.layoutMode]);
+
+  // Exploration mode: ancestor/descendant/full lineage highlighting
+  const explorationMode = useGraphStore((s) => s.explorationMode);
+  const selectedNodeId = useGraphStore((s) => s.selectedNodeId);
+  const datasetIndex = useGraphStore((s) => s.datasetIndex);
+  useEffect(() => {
+    if (!cy || !selectedNodeId || !datasetIndex) return;
+
+    if (explorationMode === 'none') {
+      activateFocusMode(cy, selectedNodeId);
+      return;
+    }
+
+    let relatedNodes: Set<string>;
+    if (explorationMode === 'ancestors') {
+      relatedNodes = getAncestors(datasetIndex, selectedNodeId);
+    } else if (explorationMode === 'descendants') {
+      relatedNodes = getDescendants(datasetIndex, selectedNodeId);
+    } else {
+      // 'focus' = full lineage (ancestors + descendants)
+      const ancestors = getAncestors(datasetIndex, selectedNodeId);
+      const descendants = getDescendants(datasetIndex, selectedNodeId);
+      relatedNodes = new Set([...ancestors, ...descendants]);
+    }
+
+    activateExplorationMode(cy, selectedNodeId, relatedNodes);
+  }, [cy, explorationMode, selectedNodeId, datasetIndex]);
+
+  // Attribute filters: fade nodes that don't match paradigm/typing/decade
+  const attributeFilters = useGraphStore((s) => s.attributeFilters);
+  useEffect(() => {
+    if (!cy || !dataset) return;
+    applyAttributeFilters(cy, attributeFilters, dataset);
+  }, [cy, attributeFilters, dataset]);
 
   return <div ref={containerRef} className="graph-view" />;
 }

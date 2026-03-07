@@ -123,6 +123,9 @@ export interface CytoscapeNodeData {
   degree: number;
   cluster: ClusterType;
   parent?: string;
+  logoUrl?: string | null;
+  logoColor?: string | null;
+  abbr?: string;
 }
 
 export interface CytoscapeEdgeData {
